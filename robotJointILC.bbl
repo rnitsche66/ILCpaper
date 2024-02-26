@@ -1,0 +1,38 @@
+\begin{thebibliography}{1}
+
+\bibitem{AhnChenEtAl2007}
+Hyo-Sung Ahn, YangQuan Chen, and Kevin~L. Moore.
+\newblock {Iterative Learning Control: Brief Survey and Categorization}.
+\newblock {\em IEEE Transactions on Systems, Man, and Cybernetics, Part C
+  (Applications and Reviews)}, 37(6):1099--1121, 2007.
+
+\bibitem{ILCGlueck2015}
+M.~B{\"o}ck, T.~Gl{\"u}ck, A.~Kugi, and A.~Steinb{\"o}ck.
+\newblock {\em Fortgeschrittene Methoden der nichtlinearen Regelung}.
+\newblock TU Wien - Institut f{\"u}r Automatisierungs- und Regelungstechnik
+  Gruppe f{\"u}r komplexe dynamische Systeme, 2015.
+
+\bibitem{Hoffmann2023}
+Kathrin Hoffmann, Christian Trapp, Alexander Hildebrandt, and Oliver Savodny.
+\newblock {Flachheitsbasierte Trajektorienfolgeregelung eines pneumatischen
+  Roboters}.
+\newblock {\em at -- Automatisierungstechnik}, 71(8):659--669, 2023.
+
+\bibitem{HoffmannIFAC23}
+Kathrin Hoffmann, Christian Trapp, Alexander Hildebrandt, and Oliver Savodny.
+\newblock Nonlinear model-based control of a pneumatically driven robot.
+\newblock Yokohama, Japan, 2023. IFAC World Congress.
+
+\bibitem{Longman2000}
+Richard~W. Longman.
+\newblock {Iterative Learning Control and Repetitive Control for Engineering
+  Practice}.
+\newblock {\em International journal of control}, 73(10):930--954, 2000.
+
+\bibitem{STADLER2022105071}
+G.~Stadler, A.~Steinboeck, L.~Marko, A.~Deutschmann-Olek, and A.~Kugi.
+\newblock Iterative learning and feedback control for the curvature and contact
+  force of a metal strip on a roll.
+\newblock {\em Control Engineering Practice}, 121:105071, 2022.
+
+\end{thebibliography}
