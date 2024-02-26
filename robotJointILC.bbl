@@ -12,11 +12,16 @@ M.~B{\"o}ck, T.~Gl{\"u}ck, A.~Kugi, and A.~Steinb{\"o}ck.
 \newblock TU Wien - Institut f{\"u}r Automatisierungs- und Regelungstechnik
   Gruppe f{\"u}r komplexe dynamische Systeme, 2015.
 
+\bibitem{Hoffmann2021}
+K.~Hoffmann, D.~Müller, R.~Simon, and O.~Savodny.
+\newblock On trajectory tracking control of fluid-driven actuators.
+\newblock {\em at -- Automatisierungstechnik}, 69(11):970--980, 2021.
+
 \bibitem{Hoffmann2023}
 Kathrin Hoffmann, Christian Trapp, Alexander Hildebrandt, and Oliver Savodny.
 \newblock {Flachheitsbasierte Trajektorienfolgeregelung eines pneumatischen
   Roboters}.
-\newblock {\em at -- Automatisierungstechnik}, 71(8):659--669, 2023.
+\newblock {\em at -- Automatisierungstechnik}, 71(8):659--669, 202.
 
 \bibitem{HoffmannIFAC23}
 Kathrin Hoffmann, Christian Trapp, Alexander Hildebrandt, and Oliver Savodny.

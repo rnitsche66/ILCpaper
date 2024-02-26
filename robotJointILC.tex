@@ -80,6 +80,8 @@ the concept of ILC is often used \cite{AhnChenEtAl2007}. In
 
 \section{Control Task}
 
+
+
 As a drafted version the paper of Steinboeck can be used \cite{STADLER2022105071}
 % \begin{verbatim}
 % https://www.sciencedirect.com/science/article/pii/S0967066122000041?via%3Dihub
@@ -87,10 +89,23 @@ As a drafted version the paper of Steinboeck can be used \cite{STADLER2022105071
 
 \subsection{Model of the Pneumatic Robot Joint}
 
-Rather following \cite{HoffmannIFAC23}, and  \cite{Hoffmann2023}.
+In this research a single joint (\cf. Fig. \ref{fig:pJointScheme}) of
+a pneumatic robot (\cf. Fig. \ref{fig:Octopus}) is considered.  In
+this pneumatically driven revolute joint, the two pressure chambers
+are separated by a swivel wing of area $\Aeff$ and an effective radius
+$\Reff$, which is semi-rotatable to $\pm 135^\circ$. The pressure
+difference between the two chambers $1$ and $2$ of the joint generates
+a driving torque
+\begin{equation}\label{drvtrq}
+\tau(p_1, p_2) = \Aeff \; \Reff \; (p_1-P_2).
+\end{equation}
 
-The rotary pneumatic joint is coverned by the following:
+The pressure in each chamber is set individually by a massflow
+$\dot m_{1,2}$ into or out of the chamber with a pneumatic valve, not
+considered in detail here. A more detailed overview of the pneumatic
+model can be found in \cite{Hoffmann2021}.
 
+The governing equations of the rotary joint model are:
 \begin{subequations} \label{pJointMdl}
   \begin{align}
    %    \dot q  & =  q} , \\
@@ -100,11 +115,14 @@ The rotary pneumatic joint is coverned by the following:
                   & \;\quad \frac{n  p_2  \Aeff \Reff \dot q}{V_{\mathrm{dead,2}} + \Aeff\;\Reff\;( \;\abs{q_{\mathrm{max}}}-q)} ,\\
     \nonumber
     \dot p_1 &= \frac{n  R T}{V_{\mathrm {dead,1}} +  \Aeff\Reff(\;\abs{q_{\mathrm {min}}}+q)}  \dot{m}_1 +  \\\label{dp1}
-        & \;\quad \frac{n  P_1  \Aeff \Reff  \dot q}{V_{\mathrm {dead,1}} +  \Aeff\Reff(\;\abs{q_{\mathrm {min}}}+q)}       . 
+        & \;\quad \frac{n  P_1  \Aeff \Reff  \dot q}{V_{\mathrm {dead,1}} +  \Aeff\Reff(\;\abs{q_{\mathrm {min}}}+q)}       ,
   \end{align}
 \end{subequations}
 
-In \eqref{pJointMdl} - exchange \eqref{dp1} and \eqref{dp2}
+where the $\Aeff$ 
+
+See also \cite{HoffmannIFAC23}, and  \cite{Hoffmann2023}.
+
 % <<FF>> *********************************************************
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\columnwidth]{./pictures/octopusgripper.jpg}}
@@ -131,6 +149,14 @@ proofreading, spelling and grammar.
 Keep your text and graphic files separate until after the text has been 
 formatted and styled. Do not number text heads---{\LaTeX} will do that 
 for you.
+
+% <<FF>> *********************************************************
+\begin{figure*}[tbp]
+\centerline{\includegraphics[scale=0.5]{./pictures/CtrlStructure_ILC.jpg}}
+\caption{Control Structure}
+\label{fig:CtrlStrct}
+\end{figure*}
+% ******************************************************************
 
 \subsection{Flatness-based Approach}\label{AA}
 Define abbreviations and acronyms the first time they are used in the text, 
@@ -362,7 +388,7 @@ acknowledgments in the unnumbered footnote on the first page.
 % \printbibliography
 
 \bibliographystyle{plain}        % {alpha} Include this if you use bibtex 
-\bibliography{BibTeX_database_BC-DS_nitr}
+\bibliography{BibTeX_database_BC-DS_4Codit}
 
 % \begin{thebibliography}{00}
 % \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain
