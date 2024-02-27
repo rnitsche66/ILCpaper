@@ -1,0 +1,110 @@
+Das Konzept von Iterative Learning Control basiert auf der Idee, dass wiederholte
+Durchläufe einer kontinuierlichen Aufgabe genutzt werden können, um die Leistung
+der Regelung schrittweise zu verbessern. Im Gegensatz zur klassischen Regelungstechnik,
+bei der das Regelergebnis nur auf Basis der aktuellen Messwerte berechnet
+wird, nutzt ILC Informationen aus vergangenen Durchläufen, um die Steuerung des
+Systems für die nächsten Durchläufe zu optimieren [1]. ILC ist deshalb speziell für
+Systeme entwickelt worden, welche wiederholende Aufgaben ausführen. Ein solches
+Konzept findet in vielen Bereichen Anwendungen. Beispielsweise bei der Regelung der
+Profiltemperatur beim Strangpressen, bei der Automatisierung eines verfahrenstechnischen
+Prozesses und vor allem bei der Automatisierung von Roboterbewegungen
+[2].
+Das Ziel von ILC ist es, die Regelgüte solcher Systeme iterativ durch Lernen zu
+verbessern. Dafür wird der Fehler und das Stellsignal des vorangegangenen Zyklus
+analysiert und für die Anpassung des neuen Stellsignals genutzt. Aufgrund der Tatsache,
+dass das neue Stellsignal vor jedem Zyklus bereits berechnet wird, ist es möglich,
+nicht kausale Algorithmen und Filter anzuwenden. Dadurch wird beispielsweise eine
+Tiefpassfilterung ohne Phasenverschiebung und eine Kompensation der Verzögerungszeit
+des Systems ermöglicht. Dies ist ein großer Vorteil gegenüber einer klassischen
+PID-Regelung [2]. Der ILC-Ansatz kann als eine Art Steuerungsanpassung verstanden
+werden, da das Stellsignal nur vom vorherigen Zyklus abhängt [1].
+Ein weiterer Vorteil von ILC besteht darin, dass der Algorithmus in der Lage ist, mit
+Ungenauigkeiten in der Modellierung des Systems umzugehen. Da der Algorithmus
+iterativ arbeitet und sich auf die Fehlerkorrektur konzentriert, können Änderungen
+des Systemverhaltens über die Zeit, die in jedem Zyklus auftreten, korrigiert werden
+[3].
+Der ILC-Ansatz gehört zur Klasse der Feedforward-Regelungen und kann im Sinne
+einer Zwei-Freiheitsgrad-Struktur durch einen Feedback-Anteil erweitert werden.
+Hierbei kann beispielsweise ein klassischer PID-Regler zum Einsatz kommen. Durch
+die Kombination von Feedforward- und Feedback-Regelung wird eine verbesserte
+Regelgüte und Störungsunterdrückung erreicht, da der ILC-Regler die periodischen
+Fehler reduziert und der Feedback-Regler die Störungen ausgleicht [1].
+
+
+Funktionsweise:
+
+Interativ Learning Control funktioniert wie folgt: In jeder Iteration
+(j = 0, 1, . . .) wird eine Steuerung uj+1 berechnet. Dafür muss der
+Ausgangsfehler ej und die Steuerung uj bestimmt und abgespeichert
+werden. Der Ausgangsfehler e = yd − ym (2.1) wird dabei aus der
+Differenz zwischen dem Sollsignal yd (desired) und dem gemessenen
+Signal ym (measured) gebildet. In Abbildung 2.2 ist der Ablauf des
+ILC-Ansatzes abgebildet. 
+
+In jeder Iteration wird die Steuerung $\uv_{j+1}$ durch die Funktion
+$\psi\bigl(\uv_j,\e_j(\uv_j)\bigr)$ berechnet. Die neue Steuerung ist
+somit nur von der vorherigen Iteration abhängig. Das daraus
+resultierende Stellsignal wird auf das System $\G$ angewendet, um den
+Ausgang $\y_{\mathrm{m},j+1}$ zu messen. Anhand des Sollsignals
+$\y_\mathrm{d}$ wird der neue Ausgangsfehler $\e_{j+1}$ ermittelt und
+zwischengespeichert. Gleichzeitig wird auch das an das System
+übergebene Stellsignal $\uv_{j+1}$ abgespeichert. Dieser Prozess kann
+beliebig oft wiederholt werden, wobei das Ziel darin besteht, die
+Steuerung $\uv$ so anzupassen, dass der Ausgangsfehler $\e$ gegen null
+konvergiert. \\ Die Berechnung des Stellsignals anhand einer
+Minimierungsaufgabe wird in den Vorlesungsunterlagen der Technischen
+Universität (TU) Wien \cite[9]{UniWien} hergeleitet und im Folgenden
+als gegeben angenommen. Zum Verständnis der Gleichung wird eine
+Verstärkungsmatrix $\Lm \in R^{N \times N}$ und eine Filtermatrix $\Q
+\in R^{N \times N}$ definiert, wobei $N$ die Anzahl der Abtastschritte
+während einer Iteration darstellt.\\ Das ILC-Gesetz hängt bei seiner
+Herleitung vom relativen Grad $r$ des Systems ab, welcher bei linearen
+Systemen auch als Polüberschuss bekannt ist. Für lineare
+zeitkontinuierliche Systeme kann der relative Grad mit der Gleichung
+\begin{equation} \label{eq:r} r = n-m \end{equation} berechnet werden,
+wobei der höchste Exponent des Zählerpolynoms der Übertragungsfunktion
+durch $m$ und der höchste Exponent des Nennerpolynoms durch $n$
+gegeben ist. Für zeitdiskrete Systeme gilt immer $r=1$. Der relative
+Grad eines diskreten Systems gibt den Zeitindex $r$ an, ab dem eine
+direkte Wirkung des Eingangs auf den Ausgang erfolgt. Er kann daher
+auch als Verzögerung interpretiert werden. \\ In praktischen
+Anwendungen kann es neben der Verzögerung durch den relativen Grad $r$
+des Systems auch zu Verzögerungen aufgrund von Digital-Analog- oder
+Analog-Digital-Wandlungen kommen. Diese Verzögerung ist durch die
+Anzahl der Abtastschritte $w$ gegeben, welche für die Wandlung
+benötigt werden. Damit kann eine Gesamtverzögerung \begin{equation}
+\label{eq:m} v = r + w \end{equation} eingeführt und im ILC-Gesetz
+berücksichtigt werden. \\
+
+Mit der Definition der Vektoren:
+\begin{align}
+	\label{eq:u_vec}
+	\uv_j &= \bigl[u_j[0] \quad u_j[1] \,  \ldots \, u_j[N-1] \bigr]^T \in R^{N \times 1} \\
+	\yv_{\mathrm{d},j} &= \bigl[y_{\mathrm{d},j}[v] \quad y_{\mathrm{d},j}[v+1] \, \ldots \, y_{\mathrm{d},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
+	\yv_{\mathrm{m},j} &= \bigl[y_{\mathrm{m},j}[v] \quad y_{\mathrm{m},j}[v+1] \, \ldots \, y_{\mathrm{m},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
+	\ev_{j} &= \yv_{\mathrm{d},j} - \yv_{\mathrm{m},j} = \bigl[e_{j}[v] \quad e_{j}[v+1] \, \ldots \, e_{j}[v+N-1] \bigr]^T \in R^{N \times 1} \label{eq:evec_def}
+\end{align}
+
+ergibt sich das ILC-Gesetz in der Lifted-System Darstellung zu:
+\begin{equation}
+	\label{eq:ilc_lift}
+	\uv_{j+1} = \Q\left(\uv_j + \Lm \e_j\right).
+\end{equation}
+
+Die Verstärkungsmatrix $\Lm$ hat die Aufgabe, den Einfluss des
+Ausgangsfehlers $\e_j$ in Relation zur vorherigen Steuerung $\uv_j$ zu
+bestimmen. Durch die Wahl der Matrixelemente kann also gesteuert
+werden, wie stark der Einfluss des Ausgangsfehlers auf die neue
+Steuerung ist. Die Filtermatrix $\Q$ dient hingegen dazu, Messrauschen
+und sich wiederholende Störungen zu unterdrücken. Dabei wirkt sie wie
+ein Tiefpassfilter, welcher nur niedrige Frequenzen passieren lässt
+und hohe Frequenzen herausfiltert. \\ Das ILC-Gesetz
+\autoref{eq:ilc_lift} kann auch in der diskreten Form angegeben
+werden:
+
+\begin{equation}
+	\label{eq:ilc_diskret}
+	u_{j+1}[k] = q[k] \bigl(u_j[k] + l[k] \, e_j[k+v]\bigr).
+\end{equation}
+
+Dafür wird der Abtastindex $k = 0,1,\ldots,N-1$ definiert.

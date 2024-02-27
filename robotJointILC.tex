@@ -22,15 +22,18 @@
 
 % \addbibresource{BibTeX_database_BC-DS_nitr.bib}
 
-
+\usepackage{float}
 \usepackage[]{hyperref}
 \hypersetup{
     colorlinks=false,
 }
 
 \usepackage{util}
+
 \newcommand{\Aeff}{\ind{A}{eff} }
-\newcommand{\Reff}{\ind{R}{eff}}
+\newcommand{\vp}{\varphi}
+\newcommand{\vpd}{\ind{\vp}{d}}
+\newcommand{\Reff}{\ind{r}{eff}}
 \newcommand{\abs}{|}
 
 
@@ -72,14 +75,53 @@ model-based control, robot control
 \end{IEEEkeywords}
 
 \section{Introduction}
-Robot control tasks often follows a repeating trajectory. For this kind
-of application the concept of learning from the error of the previous
-control run lies on the hand. That's why in the field of robot control
-the concept of ILC is often used \cite{AhnChenEtAl2007}. In
-\cite{ILCGlueck2015} the concept for
+Robot control tasks often follows a repeating trajectory. For this
+kind of application the concept of learning from the error of the
+previous control run lies at hand. That's why in the field of robot
+control the concept of ILC is often used \cite{AhnChenEtAl2007}.
 
+The concept of Iterative Learning Control is based on the idea that
+repeated runs of a continuous task can be used to gradually improve
+the performance of the control step by step.
+
+The aim of ILC is to iteratively improve the control quality of such
+systems through learning.
+
+To achieve this, the error and the control signal of the previous
+cycle are analyzed and used to adapt the new control signal. Due to
+the fact that the new control signal is already calculated before each
+cycle, it is possible to apply non-causal algorithms and filters.
+This is a big adbantage compared to a classical feedback controller.
+The ILC approach can be considered as a kind of feedforward control,
+since the control signal only depends of the control error of the
+previous cycle.
+
+The ILC approach belongs to the class of feedforward controllers and
+can be extended in the sense of a a two-degree-of-freedom structure by
+adding a feedback component.  A classic PID controller can be used
+here, for example. Through a combination of feedforward and feedback
+control, the control control peformance and disturbance rejection can
+be improved significantly. This is achievedm, as the ILC controller
+reduces the periodic errors and the feedback controller compensates
+for the disturbances \cite{ILCGlueck2015}.
+
+This two-degree-of-freedom concept will be applied to a pneumatic
+robot joint and tested in experiments. The achieved performance is
+outstanding.
+
+
+
+% *****************************************************************
 \section{Control Task}
+% *****************************************************************
 
+% <<fig>> *********************************************************
+\begin{figure}[htbp]
+  \centerline{\includegraphics[width=\columnwidth]{./pictures/octopusgripper.jpg}}
+\caption{Pneumatic Cobot from Festo (2020)}
+\label{fig:Octopus}
+\end{figure}
+% ******************************************************************
 
 
 As a drafted version the paper of Steinboeck can be used \cite{STADLER2022105071}
@@ -97,60 +139,90 @@ $\Reff$, which is semi-rotatable to $\pm 135^\circ$. The pressure
 difference between the two chambers $1$ and $2$ of the joint generates
 a driving torque
 \begin{equation}\label{drvtrq}
-\tau(p_1, p_2) = \Aeff \; \Reff \; (p_1-P_2).
+  \tau(p_1, p_2) = \Aeff \; \Reff \; (p_1-p_2).
 \end{equation}
 
+
 The pressure in each chamber is set individually by a massflow
-$\dot m_{1,2}$ into or out of the chamber with a pneumatic valve, not
-considered in detail here. A more detailed overview of the pneumatic
-model can be found in \cite{Hoffmann2021}.
+$\dot m_{1,2}$ into or out of the chamber with a pneumatic valve. A
+more detailed overview of the pneumatic model can be found in
+\cite{Hoffmann2021}.
 
 The governing equations of the rotary joint model are:
 \begin{subequations} \label{pJointMdl}
   \begin{align}
-   %    \dot q  & =  q} , \\
-    \ddot q  & =  \frac{\Aeff\Reff (p_1-p_2)}{J} , \\
-    \nonumber
-    \dot p_2 &= \frac{n  R T}{V_{\mathrm {dead,2}} + \Aeff\;\Reff\;(\;\abs{q_{\mathrm {max}}}-q)}  \dot{m}_2 - \\ \label{dp2}
-                  & \;\quad \frac{n  p_2  \Aeff \Reff \dot q}{V_{\mathrm{dead,2}} + \Aeff\;\Reff\;( \;\abs{q_{\mathrm{max}}}-q)} ,\\
-    \nonumber
-    \dot p_1 &= \frac{n  R T}{V_{\mathrm {dead,1}} +  \Aeff\Reff(\;\abs{q_{\mathrm {min}}}+q)}  \dot{m}_1 +  \\\label{dp1}
-        & \;\quad \frac{n  P_1  \Aeff \Reff  \dot q}{V_{\mathrm {dead,1}} +  \Aeff\Reff(\;\abs{q_{\mathrm {min}}}+q)}       ,
+    % \dot q  & =  q} , \\
+    \label{ddphi}
+    \ddot \vp  & =  \frac{\Aeff\Reff (p_1-p_2) - \ind{\tau}{f}(\dot\varphi)}{J} , \\
+    \label{dp1}
+     \dot p_1 &= \frac{n ( R T \dot{m}_1 - p_1 \Aeff \Reff \dot\vp )}{ 
+                \Aeff\Reff\;(\;\abs{\vp_{\mathrm {max}}}+\vp\abs)}  \\
+    \label{dp2}
+    \dot p_2 &= \frac{n ( R T \dot{m}_2 + p_2 \Aeff \Reff \dot\vp )}{ 
+               \Aeff\Reff\;(\;\abs{\vp_{\mathrm {max}}}-\vp\abs)} ,
   \end{align}
 \end{subequations}
-
-where the $\Aeff$ 
-
-See also \cite{HoffmannIFAC23}, and  \cite{Hoffmann2023}.
-
+where $\ind{\tau}{f}$ is the friction torque
+(\cf. Figure~\ref{fig:pJointScheme}), $n$ is the polytropic exponent,
+$R$ the specific gas constant, and $T$ the temperature. The valves are
+installed next to the drive, so the tubes are short and the mass flow
+to and from the pressure chamber are considered to be equal to the
+mass flow set by the valves.
+% \eqref{ddphi}\eqref{dp1}\eqref{dp2}
+% See also \cite{HoffmannIFAC23}, and  \cite{Hoffmann2023}.
 % <<FF>> *********************************************************
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=\columnwidth]{./pictures/octopusgripper.jpg}}
-\caption{Pneumatic Cobot from Festo (2020)}
-\label{fig:Octopus}
-\end{figure}
-% ******************************************************************
-
-
-% <<FF>> *********************************************************
-\begin{figure}[htbp]
-\centerline{\includegraphics[width=\columnwidth]{./pictures/pJoint.jpg}}
-\caption{Schematics of a pneumatic rotary joint \cite{HoffmannIFAC23}.}
+  \setlength{\unitlength}{1cm}
+   \begin{picture}(5,6)
+  % \centerline{\includegraphics[width=\columnwidth]{./pictures/pJoint.jpg}}
+     \centerline{\includegraphics[scale=0.3]{./pictures/Struk_Zylinder2.png}}
+ % Beschriftungen
+   \put(-2.6,-.2){$\dot m_1$}
+   \put(-6.2,-.2){$\dot m_2$}
+   \put(-3.2,5.2){$\tau(p_1,p_2)$}
+   \put(-2.1,4.2){$\ind{\tau}{f}(\vp)$}
+   \put(-3.8,2.9){$\Reff$}
+   \put(-5.2,4.5){$\Aeff$}
+   \put(-5.2,5.5){$\dot \vp, \vp$}
+   \put(-2.8,2.5){$p_1$}
+   \put(-6.2,2.5){$p_2$}   
+   \end{picture}
+ \caption{Schematics of a pneumatic rotary joint.}
 \label{fig:pJointScheme}
 \end{figure}
 % ******************************************************************
 
+\begin{Remark}\label{rem:friction}
+  In the following, the frictioin will be neglected for controller
+  design, since the task of the ILC is to compensate the friction,
+  which plays a crucial role in controlling the position of the
+  pneumatic joint with high accuracy. \hfill $\square$
+\end{Remark}
+
+
 \section{Controller Design}
-Before you begin to format your paper, first write and save the content as a 
-separate text file. Complete all content and organizational editing before 
-formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
-proofreading, spelling and grammar.
 
-Keep your text and graphic files separate until after the text has been 
-formatted and styled. Do not number text heads---{\LaTeX} will do that 
-for you.
+In a first step of the controller design a subordinary pressure
+controller based on flatness is introduced. To control the position
+$\varphi$ a simple linear $PI$ controller is added.
 
-% <<FF>> *********************************************************
+In a second step, a controller using the ILC approach is added to have
+a better or almost perfect tracking behavior for repeating sequences
+of the desired position $\vpd$.
+
+The structure of the control loop can be seen in Figure~\ref{fig:CtrlStrct}.
+
+For the controller design of the position controller of the pneumatic
+joint \eqref{pJointMdl}, the mass flows are the the control inputs
+\begin{equation}\label{Uctrl}
+  \uv = \left[\dot m_1, \dot m_2 \right]^T,
+\end{equation}
+and the state vector is defined as
+\begin{equation}\label{states}
+  \x = \left[\vp, \dot\vp, p_1, p_2\right]^T.
+\end{equation}
+
+% <<fig>> *********************************************************
 \begin{figure*}[tbp]
 \centerline{\includegraphics[scale=0.5]{./pictures/CtrlStructure_ILC.jpg}}
 \caption{Control Structure}
@@ -158,16 +230,207 @@ for you.
 \end{figure*}
 % ******************************************************************
 
-\subsection{Flatness-based Approach}\label{AA}
-Define abbreviations and acronyms the first time they are used in the text, 
-even after they have been defined in the abstract. Abbreviations such as 
-IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
-abbreviations in the title or heads unless they are unavoidable.
+\subsection{Flatness-based Approach -- Inner Loop}\label{FlatDesign}
+According to \cite{Rothfus1997} a flatness-based controller for the
+pressures in chamber 1 and 2, respectively, are designed. The
+underlying flatness-based pressure controllers for the chambers can be
+designed independently, since both chambers are only coupled via the
+position $\vp$ and velocity $\dot \vp$ of the swivel. For the
+controller design these states can be considered as variable
+parameters as proposed in \cite{Falkenhahn2017}.
 
-\subsection{Iterative Learning Control}
-Rather following the approach from \cite{ILCGlueck2015}.
+It is easy to see from \eqref{dp1} that $p_1$ is a flat output for chamber~1, \ie.:
+\begin{subequations}\label{y1flat}
+  \begin{align}
+    y_1 & = p_1 \\
+    \dot y_1 &= \dot p_1 = \frac{n}{V_1(\vp)} \left(R T \dot m_1 - p_1 \dot \vp \ind{V}{spec}\right) = \theta_1(p_1, \dot m_1,\vp, \dot\vp),
+  \end{align}
+\end{subequations}
+with $V_1(\vp)= \Aeff\Reff\;(\;\abs{\vp_{\mathrm {max}}}+\vp\abs)$
+and $\ind{V}{spec} = \Aeff\Reff$.
 
-% <<FF>> *********************************************************
+By introducing a new input $\nu_{p_1}$ for $\dot p_1$, one gets:
+\begin{equation}\label{nu1}
+ \dot p_1 =  \frac{n}{V_1(\vp)} \left(R T \dot m_1 - p_1 \dot \vp \ind{V}{spec}\right)  = \nu_{p_1}
+\end{equation}
+The nonlinearity of chamber~1 can now easily linearised by feedback
+solving \eqref{nu1} for the system input:
+\begin{equation}\label{eta1}
+ \dot m_1 = \frac{V1(\vp)}{n R T}\left( \nu_{p_1} - \frac{n p_1 \dot V_1(\dot \vp)}{V_1(\vp)}   \right) = \eta_1(\vp,\dot \vp,p_1,\nu_{p_1}).
+\end{equation}
+The same holds for the second chamber, \ie.:
+\begin{equation}\label{linFB}
+  \dot m_i = \eta_i(\vp,\dot \vp,p_i,\nu_{p_i}), \quad i \in \{1,2\}.
+\end{equation}
+Applying \eqref{linFB} to the model of the rotational joint
+\eqref{pJointMdl} the systems is in Brunovsky canonical form
+\cite{Isidori1995}, \cf. Figure~\ref{fig:Bruno}.
+
+For model of the rotational joint, linearized by feedback,
+\ie. \eqref{pJointMdl} with \eqref{linFB}, a linear controller for the
+pressures can easily designed:
+\begin{equation}\label{linPresCtrl}
+\nu_{p_i} = \dot p_{i,\mathrm{d}} - k_i (p_i - p_{i,\mathrm{d}}) , \quad i \in \{1,2\}.
+\end{equation}
+
+%<<fig>> *************************************************************
+\begin{figure}[htbp] %[htbp]
+  \begin{center}
+  \unitlength1mm
+  % \setlength{\fboxsep}{0pt}
+  %\fbox{
+   \begin{picture}(30,16)
+ % Beschriftungen
+     \put( 0, 7.5){\makebox(10, 5){${\nu}_{p_i}$}}
+       \put( 20, 7.5){\makebox(10, 5){$p_i$}}     
+      \multiput( 10, 0)(20, 0){1}{\framebox(10,15){$\D\int$}}
+      \multiput(  0, 7.5)(20, 0){2}{\vector(1,0){10}}
+   \end{picture}
+%   }
+ \end{center}
+   \caption{Brunovsky normal form for the pneumatic joint, \ie. \eqref{pJointMdl} with  \eqref{linFB}.}
+\label{fig:Bruno}
+\end{figure}
+% *****************************************************************
+
+% *****************************************************************
+\emph{Position Control for the Linearized System}\\[1pt]
+% *****************************************************************
+To control the postion of the rotational joint, a simple linear controller is used:
+\begin{subequations}\label{taupi}
+  \begin{align}
+               e &= (\vpd-\vp), \\
+  \ind{\tau}{PI} &= \ind{k}{p} e + \ind{k}{I}\int e \; \mathrm{d}t. 
+ \end{align}
+\end{subequations}
+
+% *****************************************************************
+\emph{Split the torque into chamber pressures}\\[1pt]
+% *****************************************************************
+Since the output of the controller \eqref{taupi} is a torque, the
+torque has to be converted / split into some feasible pressure demands for the
+underlying pressure controller \eqref{linPresCtrl}:
+\begin{subequations}\label{tau2pd}
+  \begin{align}
+               \ind{p}{1,d} &= \ind{p}{m} + \frac{\ind{\tau}{PI}}{2\;\ind{V}{spec}},\\
+               \ind{p}{2,d} &= \ind{p}{m} - \frac{\ind{\tau}{PI}}{2\;\ind{V}{spec}},
+ \end{align}
+\end{subequations}
+while $\ind{p}{m}$ is the so-called mean pressure, which has to be
+defined appropriately.
+\begin{Remark}\label{rem:pm}
+  The pressures $p_i$ range around this mean pressure. Note, this mean
+  pressure can be changed during time, depending on the state of the
+  robot or joint, \ie. $\ind{p}{m} = \ind{p}{m}(\x,t)$. In this case,
+  this is a nonlinear MIMO controller. \hfill$\square$
+\end{Remark}
+
+% **************************************************************
+\subsection{Iterative Learning Control -- Outer Loop}
+% **************************************************************
+In the controller desing so far, no friction model
+(\cf. Remark~\ref{rem:friction}) or other model uncertainties has been
+considered. To address this issues an Iterarive Lerning Control approach
+is introduced.
+
+\begin{Remark}\label{rem:ILCrepeating}
+  One condition to successfully apply an ILC concept to an application
+  is, that the trajectories are continuously repeating. Another
+  condition is, that the system to be controlled is stable. That is why
+  an underlying controller, \eg. the flatness-based pressure and
+  position controller is applied to stabilize the system. \hfill $\square$
+\end{Remark}
+
+\emph{Interativ Learning Control works as follows:} In each iteration
+$\left(j=0,1,\ldots\right)$ a feedforward control value $\uv_{j+1}$ is
+calculated.
+
+To do this, the error $\e_j$ and the control $\uv_j$ must be
+determined and stored.  The output error
+\begin{equation}
+	\label{eq:e_yd_ym}
+	\e = \y_\mathrm{d} - \y_\mathrm{m}
+\end{equation}
+is calculated from the difference between the desired signal
+$\y_\mathrm{d}$ and the measured signal $\y_\mathrm{m}$.  In
+Fig.~\ref{fig:illuILC} the sequences of the ILC approach is
+illustrated \cite{ILCGlueck2015}.
+
+In each iteration, the control $\uv_{j+1}$ is calculated by the
+function $\bpsi\bigl(\uv_j,\e_j(\uv_j)\bigr)$. The new control
+therefore only depends on the previous iteration.
+
+The resulting control signal is applied to the system $\G$ in order to
+measure the output $\y_{\mathrm{m},j+1}$. Using the setpoint signal
+$\y_\mathrm{d}$, the new output error $\e_{j+1}$ is determined and
+stored temporarily. At the same time, the control signal $\uv_{j+1}$
+is also saved.
+
+This process can be repeated as often as required, since the goal of
+this procedure is to adjust the feedforward control $\uv$ such that
+the output error $\e$ converges to zero.
+
+For the computation of the control signal $\uv$ a minimization task is
+used (\cf. \cite{ILCGlueck2015}). To do this, a gain matrix
+$\Lm \in R^{N \times N}$ and a filter matrix $\Q \in R^{N \times N}$
+is defined, where $N$ is the number of samplings during one iteration.
+
+The ILC law depends on the relative degree $r$ of the system.  For
+linear systems, the relative degree can be calculated by
+\begin{equation}\label{eq:r}
+  r = n-m,
+\end{equation}
+where the highest exponent of the numerator polynomial of the transfer
+function is given by $m$ and the highest exponent of the denominator
+polynomial is given by $n$.
+
+For discrete-time systems, $r=1$ always applies.  It can therefore
+also be interpreted as a delay.
+
+In practical applications, in addition to the delay due to the
+relative degree $r$ of the system, delays can also occur due to
+digital-to-analog or analog-to-digital conversions. This delay is
+given by the number of sampling steps $w$ required for the conversion.
+This means that a total delay
+\begin{equation}  \label{eq:m}
+  v = r + w
+\end{equation} can be introduced and taken into account in the ILC law.
+
+By introducing
+
+\begin{align}
+	\label{eq:u_vec}
+	\uv_j &= \bigl[u_j[0] \quad u_j[1] \,  \ldots \, u_j[N-1] \bigr]^T \in R^{N \times 1} \\
+	\y_{\mathrm{d},j} &= \bigl[y_{\mathrm{d},j}[v] \quad y_{\mathrm{d},j}[v+1] \, \ldots \, y_{\mathrm{d},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
+	\y_{\mathrm{m},j} &= \bigl[y_{\mathrm{m},j}[v] \quad y_{\mathrm{m},j}[v+1] \, \ldots \, y_{\mathrm{m},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
+	\e_{j} &= \y_{\mathrm{d},j} - \y_{\mathrm{m},j} = \bigl[e_{j}[v] \quad e_{j}[v+1] \, \ldots \, e_{j}[v+N-1] \bigr]^T \in R^{N \times 1} \label{eq:evec_def}
+\end{align}
+the ILC control law is given in lifted-shift representation:
+\begin{equation}
+	\label{eq:ilc_lift}
+	\uv_{j+1} = \Q\left(\uv_j + \Lm \e_j\right).
+\end{equation}
+
+
+The gain matrix $\Lm$ has the task of calculating the influence of the
+output error $\e_j$ in relation to the previous control $\uv_j$. The
+choice of matrix elements determine the influence of the output error
+on the new feedforward-control.  The filter matrix $\Q$, on the other
+hand, is used to suppress measurement noise and  repetitive
+interference. It acts like a low-pass filter that only allows low
+frequencies to pass through and filters out high frequencies. \\
+
+The ILC law \eqref{eq:ilc_lift} can also be specified in the discrete
+form:
+
+\begin{equation}
+	\label{eq:ilc_diskret}
+	u_{j+1}[k] = q[k] \bigl(u_j[k] + l[k] \, e_j[k+v]\bigr),
+\end{equation}
+
+where $k = 0,1,\ldots,N-1$ is the sampling index.
+
+% <<fig>> *********************************************************
 \begin{figure*}[tbp]
 \centerline{\includegraphics{./pictures/ILCillu.jpg}}
 \caption{Illustration of the ILC concept \cite{ILCGlueck2015}}
@@ -175,41 +438,22 @@ Rather following the approach from \cite{ILCGlueck2015}.
 \end{figure*}
 % ******************************************************************
 
-\begin{itemize}
-\item Use either SI (MKS) or CGS as primary units. (SI units are
-  encouraged.) English units may be used as secondary units (in
-  parentheses). An exception would be the use of English units as
-  identifiers in trade, such as ``3.5-inch disk drive''.
-\item Avoid combining SI and CGS units, such as current in amperes and
-  magnetic field in oersteds. This often leads to confusion because
-  equations do not balance dimensionally. If you must use mixed units,
-  clearly state the units for each quantity that you use in an
-  equation.
-\item Do not mix complete spellings and abbreviations of units:
-  ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not
-  ``webers/m\textsuperscript{2}''. Spell out units when they appear in
-  text: ``. . . a few henries'', not ``. . . a few H''.
-\item Use a zero before decimal points: ``0.25'', not ``.25''. Use
-  ``cm\textsuperscript{3}'', not ``cc''.)
-\end{itemize}
 
-\subsection{Equations}
-Number equations consecutively. To make your equations more compact,
-you may use the solidus (~/~), the exp function, or appropriate
-exponents. Italicize Roman symbols for quantities and variables, but
-not Greek symbols. Use a long dash rather than a hyphen for a minus
-sign. Punctuate equations with commas or periods when they are part of
-a sentence, as in:
-\begin{equation}
-a+b=\gamma\label{eq}
-\end{equation}
 
-Be sure that the 
-symbols in your equation have been defined before or immediately following 
-the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
-the beginning of a sentence: ``Equation \eqref{eq} is . . .''
 
-% <<FF>> *********************************************************
+% <<FF>> ***********************************************************
+\section{Experimental Results}
+% *****************************************************************
+
+% <<fig>> *********************************************************
+\begin{figure}[htbp]
+  \centerline{\includegraphics[width=\columnwidth]{./pictures/Aufbau_pJoint.png}}
+\caption{Experimental Setup}
+\label{fig:ExpSetUp}
+\end{figure}
+% ******************************************************************
+
+% <<fig>> *********************************************************
 % Script: C:\Users\nitr\OneDrive - Festo\home\papers\_ILC\pictures\plot_Messungen_dSpace.m
 % Data:   ILC_Sollsignal_DR70_Shruti_fric.mat
 \begin{figure*}[htbp]
@@ -219,204 +463,19 @@ the beginning of a sentence: ``Equation \eqref{eq} is . . .''
 \end{figure*}
 % ******************************************************************
 
-\subsection{\LaTeX-Specific Advice}
-
-Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
-of ``hard'' references (e.g., \verb|(1)|). That will make it possible
-to combine sections, add equations, or change the order of figures or
-citations without having to go through the file line by line.
-
-Please don't use the \verb|{eqnarray}| equation environment. Use
-\verb|{align}| or \verb|{IEEEeqnarray}| instead. The \verb|{eqnarray}|
-environment leaves unsightly spaces around relation symbols.
-
-Please note that the \verb|{subequations}| environment in {\LaTeX}
-will increment the main equation counter even when there are no
-equation numbers displayed. If you forget that, you might write an
-article in which the equation numbers skip from (17) to (20), causing
-the copy editors to wonder if you've discovered a new method of
-counting.
-
-{\BibTeX} does not work by magic. It doesn't get the bibliographic
-data from thin air but from .bib files. If you use {\BibTeX} to
-produce a bibliography you must send the .bib files.
-
-{\LaTeX} can't read your mind. If you assign the same label to a
-subsubsection and a table, you might find that Table I has been cross
-referenced as Table IV-B3.
-
-{\LaTeX} does not have precognitive abilities. If you put a
-\verb|\label| command before the command that updates the counter it's
-supposed to be using, the label will pick up the last counter to be
-cross referenced instead. In particular, a \verb|\label| command
-should not go before the caption of a figure or a table.
-
-Do not use \verb|\nonumber| inside the \verb|{array}| environment. It
-will not stop equation numbers inside \verb|{array}| (there won't be
-any anyway) and it might stop a wanted equation number in the
-surrounding equation.
-
-\subsection{Some Common Mistakes}\label{SCM}
-\begin{itemize}
-\item The word ``data'' is plural, not singular.
-\item The subscript for the permeability of vacuum $\mu_{0}$, and
-  other common scientific constants, is zero with subscript
-  formatting, not a lowercase letter ``o''.
-\item In American English, commas, semicolons, periods, question and
-  exclamation marks are located within quotation marks only when a
-  complete thought or name is cited, such as a title or full
-  quotation. When quotation marks are used, instead of a bold or
-  italic typeface, to highlight a word or phrase, punctuation should
-  appear outside of the quotation marks. A parenthetical phrase or
-  statement at the end of a sentence is punctuated outside of the
-  closing parenthesis (like this). (A parenthetical sentence is
-  punctuated within the parentheses.)
-\item A graph within a graph is an ``inset'', not an ``insert''. The
-  word alternatively is preferred to the word ``alternately'' (unless
-  you really mean something that alternates).
-\item Do not use the word ``essentially'' to mean ``approximately'' or
-  ``effectively''.
-\item In your paper title, if the words ``that uses'' can accurately
-  replace the word ``using'', capitalize the ``u''; if not, keep using
-  lower-cased.
-\item Be aware of the different meanings of the homophones ``affect''
-  and ``effect'', ``complement'' and ``compliment'', ``discreet'' and
-  ``discrete'', ``principal'' and ``principle''.
-\item Do not confuse ``imply'' and ``infer''.
-\item The prefix ``non'' is not a word; it should be joined to the
-  word it modifies, usually without a hyphen.
-\item There is no period after the ``et'' in the Latin abbreviation
-  ``et al.''.
-\item The abbreviation ``i.e.'' means ``that is'', and the
-  abbreviation ``e.g.'' means ``for example''.
-\end{itemize}
-An excellent style manual for science writers is \cite{ILCGlueck2015}.
-
-\subsection{Authors and Affiliations}
-\textbf{The class file is designed for, but not limited to, six authors.} A 
-minimum of one author is required for all conference articles. Author names 
-should be listed starting from left to right and then moving down to the 
-next line. This is the author sequence that will be used in future citations 
-and by indexing services. Names should not be listed in columns nor group by 
-affiliation. Please keep your affiliations as succinct as possible (for 
-example, do not differentiate among departments of the same organization).
-
-\subsection{Identify the Headings}
-Headings, or heads, are organizational devices that guide the reader through 
-your paper. There are two types: component heads and text heads.
-
-Component heads identify the different components of your paper and are not 
-topically subordinate to each other. Examples include Acknowledgments and 
-References and, for these, the correct style to use is ``Heading 5''. Use 
-``figure caption'' for your Figure captions, and ``table head'' for your 
-table title. Run-in heads, such as ``Abstract'', will require you to apply a 
-style (in this case, italic) in addition to the style provided by the drop 
-down menu to differentiate the head from the text.
-
-Text heads organize the topics on a relational, hierarchical basis. For 
-example, the paper title is the primary text head because all subsequent 
-material relates and elaborates on this one topic. If there are two or more 
-sub-topics, the next level head (uppercase Roman numerals) should be used 
-and, conversely, if there are not at least two sub-topics, then no subheads 
-should be introduced.
-
-\subsection{Figures and Tables}
-\paragraph{Positioning Figures and Tables} Place figures and tables at the top and 
-bottom of columns. Avoid placing them in the middle of columns. Large 
-figures and tables may span across both columns. Figure captions should be 
-below the figures; table heads should appear above the tables. Insert 
-figures and tables after they are cited in the text. Use the abbreviation 
-``Fig.~\ref{fig}'', even at the beginning of a sentence.
-
-\begin{table}[htbp]
-\caption{Table Type Styles}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
-\cline{2-4} 
-\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
-\hline
-copy& More table copy$^{\mathrm{a}}$& &  \\
-\hline
-\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
-\end{tabular}
-\label{tab1}
-\end{center}
-\end{table}
+% <<FF>> ***********************************************************
+\section{Summary}
+% *****************************************************************
 
 
-
-Figure Labels: Use 8 point Times New Roman for Figure labels. Use words 
-rather than symbols or abbreviations when writing Figure axis labels to 
-avoid confusing the reader. As an example, write the quantity 
-``Magnetization'', or ``Magnetization, M'', not just ``M''. If including 
-units in the label, present them within parentheses. Do not label axes only 
-with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization 
-\{A[m(1)]\}'', not just ``A/m''. Do not label axes with a ratio of 
-quantities and units. For example, write ``Temperature (K)'', not 
-``Temperature/K''.
-
-\section*{Acknowledgment}
-
-The preferred spelling of the word ``acknowledgment'' in America is without 
-an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B. 
-G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
-acknowledgments in the unnumbered footnote on the first page.
-
-\section*{References}
-
-% Please number citations consecutively within brackets \cite{b1}. The 
-% sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
-% number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
-% the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
-
-% Number footnotes separately in superscripts. Place the actual footnote at 
-% the bottom of the column in which it was cited. Do not put footnotes in the 
-% abstract or reference list. Use letters for table footnotes.
-
-% Unless there are six authors or more give all authors' names; do not use 
-% ``et al.''. Papers that have not been published, even if they have been 
-% submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
-% that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
-% Capitalize only the first word in a paper title, except for proper nouns and 
-% element symbols.
-
-% For papers published in translation journals, please give the English 
-% citation first, followed by the original foreign-language citation \cite{b6}.
-
-% \printbibliography
+% <<FF>> ***********************************************************
+% \section*{References}
+% *****************************************************************
 
 \bibliographystyle{plain}        % {alpha} Include this if you use bibtex 
 \bibliography{BibTeX_database_BC-DS_4Codit}
 
-% \begin{thebibliography}{00}
-% \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain
-%   integrals of Lipschitz-Hankel type involving products of Bessel
-%   functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551,
-%   April 1955.
-% \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and
-%   Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-% \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films
-%   and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and
-%   H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-% \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-% \bibitem{b5} R. Nicole, ``Title of paper with only first word
-%   capitalized,'' J. Name Stand. Abbrev., in press.
-% \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron
-%   spectroscopy studies on magneto-optical media and plastic substrate
-%   interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741,
-%   August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301,
-%   1982].
-% \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley,
-%   CA: University Science, 1989.
-% \end{thebibliography}
 
 
-\vspace{12pt} \color{red} IEEE conference templates contain guidance
-text for composing and formatting conference papers. Please ensure
-that all template text is removed from your conference paper prior to
-submission to the conference. Failure to remove the template text from
-your paper may result in your paper not being published.
 
 \end{document}

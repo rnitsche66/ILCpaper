@@ -12,27 +12,31 @@ M.~B{\"o}ck, T.~Gl{\"u}ck, A.~Kugi, and A.~Steinb{\"o}ck.
 \newblock TU Wien - Institut f{\"u}r Automatisierungs- und Regelungstechnik
   Gruppe f{\"u}r komplexe dynamische Systeme, 2015.
 
+\bibitem{Falkenhahn2017}
+Valentin Falkenhahn.
+\newblock {Modellierung und Modellbasierte Regelung von
+  Kontinuum-Manipulatoren}, 2017.
+
 \bibitem{Hoffmann2021}
 K.~Hoffmann, D.~Müller, R.~Simon, and O.~Savodny.
 \newblock On trajectory tracking control of fluid-driven actuators.
 \newblock {\em at -- Automatisierungstechnik}, 69(11):970--980, 2021.
 
-\bibitem{Hoffmann2023}
-Kathrin Hoffmann, Christian Trapp, Alexander Hildebrandt, and Oliver Savodny.
-\newblock {Flachheitsbasierte Trajektorienfolgeregelung eines pneumatischen
-  Roboters}.
-\newblock {\em at -- Automatisierungstechnik}, 71(8):659--669, 202.
-
-\bibitem{HoffmannIFAC23}
-Kathrin Hoffmann, Christian Trapp, Alexander Hildebrandt, and Oliver Savodny.
-\newblock Nonlinear model-based control of a pneumatically driven robot.
-\newblock Yokohama, Japan, 2023. IFAC World Congress.
+\bibitem{Isidori1995}
+Alberto Isidori.
+\newblock {\em {Nonlinear control systems}}.
+\newblock Springer Science \& Business Media, third edition, 1995.
 
 \bibitem{Longman2000}
 Richard~W. Longman.
 \newblock {Iterative Learning Control and Repetitive Control for Engineering
   Practice}.
 \newblock {\em International journal of control}, 73(10):930--954, 2000.
+
+\bibitem{Rothfus1997}
+Ralf Rothfu{\ss}.
+\newblock {Anwendung der flachheitsbasierten Analyse und Regelung nichtlinearer
+  Mehrgr{\"o\ss}ensysteme}, 1997.
 
 \bibitem{STADLER2022105071}
 G.~Stadler, A.~Steinboeck, L.~Marko, A.~Deutschmann-Olek, and A.~Kugi.
