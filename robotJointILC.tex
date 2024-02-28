@@ -53,7 +53,7 @@
 
 \begin{document}
 
-\title{Iterative Learning Control of a Pneumatically Driven Robot Joint\\
+\title{Iterative Learning Control \\ of a Pneumatically Driven Robot Joint%\\
 % {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
 % should not be used}
 % \thanks{Identify applicable funding agency here. If none, delete this.}
@@ -164,7 +164,7 @@ but for other industrial applications, \eg. \cite{STADLER2022105071}.
 \end{figure}
 % ******************************************************************
 
-\newpage
+% \newpage
 
 % As a drafted version the paper of Steinboeck can be used \cite{STADLER2022105071}
 % \begin{verbatim}
@@ -355,6 +355,7 @@ To control the postion of the rotational joint, a simple linear controller is us
 \end{figure*}
 % ******************************************************************
 
+
 In the controller desing so far, no friction model
 (\cf. Remark~\ref{rem:friction}) or other model uncertainties has been
 considered. To address this issues an Iterarive Lerning Control
@@ -372,6 +373,10 @@ pneumatic robot joint.
 \emph{Iterative Learning Control works as follows:} In each iteration
 $\left(j=0,1,\ldots\right)$ a feedforward control value $\uv_{j+1}$ is
 calculated.
+
+% <<fig>> ******************* CtrlStruct Blockschaltbild *******************
+\input{./pictures/CtrlStrct.tex} % \label{fig:CtrlStrct}
+% **************************************************************************
 
 To do this, the error $\e_j$ and the control $\uv_j$ must be
 determined and stored.  The output error
@@ -464,10 +469,6 @@ form:
 where $k = 0,1,\ldots,N-1$ is the sampling index.
 
 
-% <<fig>> ******************* CtrlStruct Blockschaltbild *******************
-\input{./pictures/CtrlStrct.tex} % \label{fig:CtrlStrct}
-% **************************************************************************
-
 % *****************************************************************
 \subsection{Splitting the torque into chamber pressures}
 % *****************************************************************
@@ -516,7 +517,7 @@ pressure sensor for the supply pressure (4), pneumatic valve with
 valve controller (5), pressure sensor for the chambers (6,7),
 pneumatic joint (8), and an interface PCB to the dSpace system.
 % <<fig>> *********************************************************
-\begin{figure}[htbp]
+\begin{figure}[bp]
   \centerline{\includegraphics[width=\columnwidth]{./pictures/Aufbau_pJoint.png}}
   \caption{Experimental Setup: the pneumatic joint (8) is controlled
     via a propotional Piezo valve (5) and a rapid-control-prototyping
@@ -526,6 +527,22 @@ pneumatic joint (8), and an interface PCB to the dSpace system.
 % ******************************************************************
 
 \subsection{Experimental Results}
+% <<fig>> *********************************************************
+% Script: C:\Users\nitr\OneDrive - Festo\home\papers\_ILC\pictures\plot_Messungen_dSpace.m
+% Data:   ILC_Sollsignal_DR70_Shruti_fric.mat
+\begin{figure*}[htbp]
+\centerline{\includegraphics[scale=.7]{./pictures/dSpace_Messung_ILC_DR70_Shruti2.pdf}}
+\unitlength1mm
+\begin{picture}(0,0)
+  \put(10,105){a)}
+  \put(10,60){b)}
+  \put(10,20){c)}
+\end{picture}
+\caption{Measurement resutls for a robot joint.}
+\label{fig:ILC70Shruti}
+\end{figure*}
+% ******************************************************************
+
 To test the proposed concept a typical test-trajectory is applied to
 one of the swivel drives (Fig.~\ref{fig:pJointScheme}) of the
 pneumatic robot (Fig.~\ref{fig:Octopus}). The test trajectory consists
@@ -545,6 +562,8 @@ compensation is implemented explicitly in the proposed control
 concept, but the friction effects are compensated perfectly by the ILC
 approach.
 
+
+
 The evolution of the maximal control error and the
 root-mean-square-error (rms) over several runs is almost neglectable,
 as can be easily seen in Fig.~\ref{fig:ILC70Shruti}c. Note, the
@@ -561,21 +580,7 @@ ordinate in Fig.~\ref{fig:ILC70Shruti}c is scaled logarithmically.
 \end{Remark}
 
 
-% <<fig>> *********************************************************
-% Script: C:\Users\nitr\OneDrive - Festo\home\papers\_ILC\pictures\plot_Messungen_dSpace.m
-% Data:   ILC_Sollsignal_DR70_Shruti_fric.mat
-\begin{figure*}[htbp]
-\centerline{\includegraphics[scale=.7]{./pictures/dSpace_Messung_ILC_DR70_Shruti2.pdf}}
-\unitlength1mm
-\begin{picture}(0,0)
-  \put(10,105){a)}
-  \put(10,60){b)}
-  \put(10,20){c)}
-\end{picture}
-\caption{Measurement resutls for a robot joint.}
-\label{fig:ILC70Shruti}
-\end{figure*}
-% ******************************************************************
+
 
 % <<FF>> ***********************************************************
 \section{Summary}
@@ -610,6 +615,10 @@ for pneumatic robot joints.
 % <<FF>> ***********************************************************
 % \section*{References}
 % *****************************************************************
+
+% \newpage
+
+\IEEEtriggeratref{12}
 
 \bibliographystyle{plain}        % {alpha} Include this if you use bibtex 
 \bibliography{BibTeX_database_BC-DS_4Codit}
