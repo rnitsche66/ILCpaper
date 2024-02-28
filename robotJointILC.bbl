@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{AhnChenEtAl2007}
 Hyo-Sung Ahn, YangQuan Chen, and Kevin~L. Moore.
@@ -6,16 +6,35 @@ Hyo-Sung Ahn, YangQuan Chen, and Kevin~L. Moore.
 \newblock {\em IEEE Transactions on Systems, Man, and Cybernetics, Part C
   (Applications and Reviews)}, 37(6):1099--1121, 2007.
 
+\bibitem{Bobrow1998}
+J.E. Bobrow and B.W. McDonell.
+\newblock Modeling, identification, and control of a pneumatically actuated,
+  force controllable robot.
+\newblock {\em IEEE Transactions on Robotics and Automation}, 14(5):732--742,
+  1998.
+
 \bibitem{ILCGlueck2015}
 M.~B{\"o}ck, T.~Gl{\"u}ck, A.~Kugi, and A.~Steinb{\"o}ck.
 \newblock {\em Fortgeschrittene Methoden der nichtlinearen Regelung}.
 \newblock TU Wien - Institut f{\"u}r Automatisierungs- und Regelungstechnik
   Gruppe f{\"u}r komplexe dynamische Systeme, 2015.
 
+\bibitem{BouSaba2018}
+David Bou~Saba, Paolo Massioni, Eric Bideaux, and Xavier Brun.
+\newblock Flatness-based control of a two degrees-of-freedom platform with
+  pneumatic artificial muscles.
+\newblock {\em Journal of Dynamic Systems, Measurement, and Control}, 141(2),
+  October 2018.
+
 \bibitem{Falkenhahn2017}
 Valentin Falkenhahn.
 \newblock {Modellierung und Modellbasierte Regelung von
   Kontinuum-Manipulatoren}, 2017.
+
+\bibitem{FliesLevineEtAl1995}
+M.~Flies, J.~L{\'e}vine, P.~Martin, and P.~Rouchon.
+\newblock {Flatness and defect of non-linear systems: introductory theory and
+  examples}, 1995.
 
 \bibitem{Hoffmann2021}
 K.~Hoffmann, D.~Müller, R.~Simon, and O.~Savodny.
@@ -33,6 +52,16 @@ Richard~W. Longman.
   Practice}.
 \newblock {\em International journal of control}, 73(10):930--954, 2000.
 
+\bibitem{Mattiazzo2002}
+G.~Mattiazzo, S.~Mauro, T.~Raparelli, and M.~Velardocchia.
+\newblock Control of a six‐axis pneumatic robot.
+\newblock {\em Journal of Robotic Systems}, 19(8):363--378, July 2002.
+
+\bibitem{Owens2016}
+David~H. Owens.
+\newblock {\em {Iterative Learning Control - An Optimization Paradigm}}.
+\newblock Advances in Industrial Control. Springer-Verlag GmbH, 2016.
+
 \bibitem{Rothfus1997}
 Ralf Rothfu{\ss}.
 \newblock {Anwendung der flachheitsbasierten Analyse und Regelung nichtlinearer
@@ -43,5 +72,17 @@ G.~Stadler, A.~Steinboeck, L.~Marko, A.~Deutschmann-Olek, and A.~Kugi.
 \newblock Iterative learning and feedback control for the curvature and contact
   force of a metal strip on a roll.
 \newblock {\em Control Engineering Practice}, 121:105071, 2022.
+
+\bibitem{Taghia2012}
+Javad Taghia, Andr{\'e} Wilkening, and Oleg Ivlev.
+\newblock Position control of soft-robots with rotary-type pneumatic actuators.
+\newblock In {\em German Conference on Robotics}, 2012.
+
+\bibitem{Tondu2005}
+B.~Tondu, S.~Ippolito, J.~Guiochet, and A.~Daidie.
+\newblock A seven-degrees-of-freedom robot-arm driven by pneumatic artificial
+  muscles for humanoid robots.
+\newblock {\em The International Journal of Robotics Research}, 24(4):257--274,
+  April 2005.
 
 \end{thebibliography}

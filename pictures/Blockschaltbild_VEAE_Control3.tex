@@ -1,0 +1,187 @@
+%\documentclass[10pt,a4paper]{article}
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
+%\usepackage{graphicx}
+%\usepackage{tikz}
+%\usepackage{float}
+%
+%\usetikzlibrary{shapes,arrows,fit,calc,positioning,automata,intersections}
+%%-------------------TIKZ KONFIGURATION----------------------------------
+%\newcommand{\muxheight}{7em}
+%\newcommand{\muxdist}{\muxheight/7}
+%\newcommand{\blockwidth}{6em}
+%\newcommand{\VarSysWidth}{2.1*\muxheight}
+%\newcommand{\VarSysHeight}{1.2*\muxheight}
+%\newcommand{\VarArrLen}{0.5cm}
+%% for blocks with multiple inputs:
+%\newcommand{\yarrowshift}{\blockwidth/8}
+
+
+% <<RN>> AntiWindup Blöcke noch reingepfrimelt, am 02.03.2021
+
+
+\tikzstyle{block} = [draw, fill=blue!20, rectangle,
+minimum height=3em, minimum width=\blockwidth]
+\tikzstyle{smallblock} = [draw, fill=blue!20, rectangle,
+minimum height=2em, minimum width=\blockwidth/3] % <<RN>>
+\tikzstyle{dashedblock} = [draw dashed, fill=blue!20, rectangle,
+minimum height=3em, minimum width=\blockwidth]
+\tikzstyle{invisibleblock} = [fill=blue!0, rectangle,
+minimum height=3em, minimum width=\blockwidth/4, node distance = 1cm]
+\tikzstyle{intblock} = [draw, fill=blue!20, rectangle,
+minimum height=4em, minimum width=\blockwidth/4, node distance=0.8cm]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate, node distance = 1cm]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{mux} = [draw, fill = black!101, minimum height = \muxheight, minimum width = 0.5em,node distance=1cm]
+\tikzstyle{smallmux} = [draw, fill = black!100, minimum height = 6/7*\muxheight, minimum width = 0.5em,node distance=1cm]
+%\tikzstyle{saturation} = [draw, fill=blue!20, rectangle, minimum height=3em, minimum width=\blockwidth]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzstyle{VarSubsysOut} = [draw, fill=black!10, minimum height= 3em, minimum width=\VarSysWidth, minimum height=\VarSysHeight]
+% Design of Points for marking junctions between connections
+\tikzstyle{branch} = [fill=black, minimum size=1.5mm, draw = black, shape=circle,inner sep=0pt]
+
+
+
+
+% Tutorial:
+% http://www.texample.net/tikz/examples/control-system-principles/	
+
+
+%\begin{document}
+%	\newcommand{\deltap}{\Delta p}
+%	\newcommand{\hist}{h_\mathrm{ist}}
+%	\newcommand{\hd}{h_\mathrm{d}}
+%	\newcommand{\uFF}{u_\mathrm{FF}}
+\begin{figure*}[tbp]
+		\centering
+\begin{tikzpicture}[thick,scale=1, every node/.style={transform shape}]
+  % Hilfslinien
+  \draw[step=.5cm] (-2,-2) grid (2,2);
+  \node[block,align = center] (sys) {$\Sigma$ \\ \eqref{pJointMdl} };
+  \node[block,left = of sys] (sigmav){$\ind{\Sigma}{V}$};
+	% 	% -------------------- Positioning Blocks and neccessary coordinates----------------
+	% 	\node[intblock] (int) {$ \int $};
+	% 	\node[sum, right =\blockwidth of int] (usum) {};
+        %         \node[block, above =of int,align = center](ffw){Feedforward \\ (\ref{uff}) };
+	% %	\node[block, above =of int](ffw){Feedforward};
+	% 	\node[block, below =of int] (Kp) {$ K_p $};
+	% 	\node[block, below =of Kp] (Kd) {$ K_d $};
+        %         % \node[smallblock, left = 1.5cm of int] (Ki) {$ K_i$};
+        %         % \node[smallblock, right =esum] (Ki) {$ K_i$};
+	% 	\node[branch, right =of usum](AWU_input_start){}; % Start of signal Saturation input to difference with Saturation output
+	% 	% use node with style "branch" instead of a coordinate to get the point, marking the junction
+
+	% 	\node[block, right =of AWU_input_start] (sat) {Sat};
+	% 	\node[block, left =of Kd] (Differentiator) {Differentiator};
+	% 	\node[sum, below =of sat] (AWU_sum) {};
+	% 	\node[branch, right =of sat](AWU_output_start){}; % Start of signal Saturation output to difference with Saturation input
+	% 	% Pins for blocks with multiple inputs
+	% 	 \coordinate[above =\yarrowshift of  ffw.west](ffwUP){};
+	% 	 \coordinate[above =-\yarrowshift of ffw.west](ffwDN){};
+	% 	 \coordinate[above =\yarrowshift of  int.west](intUP){};
+	% 	 \coordinate[above =-\yarrowshift of int.west](intDN){};
+
+	% 	 % Input Starting points
+	% 	 \node[input, left =of ffwUP](i_deltap) {};
+	% 	 % \node[input, left =of intUP](i_AntiW){AntiW\_x};
+		 
+	% 	 \node[branch, left =1.8*\blockwidth of intDN](Kp_input_start){};
+	% 	 \node[sum,left =0.5*\blockwidth of Kp_input_start](esum) {};
+	% 	 \node[branch, left =of esum](hd_branch){}; % junction-point
+	% 	 \node[input, left =of hd_branch] (i_hd) {};
+	% 	 \node[branch, below =of esum] (hist_branch){};% junction-point
+	% 	\node[branch] (brhist) at (hist_branch) {}; % junction-point
+	% 	 \node[input, left =of hist_branch]{};
+	% 	\path let \p1 = (i_hd), \p2 = (hist_branch) in node[input](i_hist) at (\x1,\y2){};
+	% 	 \node[output,right =of AWU_output_start] (out) {};
+	% 	 \node[output, below =of AWU_sum] (out_AWU) {};
+		 
+	% 	\path let \p1 = (usum), \p2 =( Kp) in node[sum](Kpsum) at (\x1,\y2){};		
+		 
+	% 	 % ------------------- connections ------------------------------
+		 
+	% 	 % Input connections
+	% 	 % \draw[draw,->](i_AntiW) --node[label =  {[label distance =0.3cm]left:AntiW\_x}]{}(intUP);
+	% 	 \draw[draw,->](i_deltap) --node[label = $ \delta $]{}(ffwUP);
+	% 	 \draw[draw](i_hd) --node[label = $ \h $]{}(hd_branch);
+	% 	 \draw[draw,->](hd_branch) -- node[pos=0.8,yshift=0.2cm]{$+$}(esum);
+	% 	 \draw[draw](i_hist) -- node[label=below:$ \h $]{}(hist_branch);
+	% 	 \draw[draw,->](hist_branch) -- node[pos=0.8,xshift=0.2cm]{$-$}(esum);
+	% 	 \draw[draw](esum) -- node[label={[label distance = 0.1mm]270:$ e $}]{}(Kp_input_start);
+	% 	 \draw[draw,->](Kp_input_start) -- (intDN); 
+	% 	 \draw[draw,->](hd_branch) |- (ffwDN){};
+		 
+		 
+	% 	 \draw[draw,->](int.east) -- (usum);
+	% 	 \draw[draw,->](ffw.east) -| node[label = $ \uv $]{ }(usum);
+		 
+	% 	 % Saturation and environment
+	% 	 \draw[draw](usum) -- (AWU_input_start);
+	% 	 \draw[draw,->](AWU_input_start) -- (sat);
+	% 	 \draw[draw] (sat) -- (AWU_output_start);
+	% 	 \draw[draw,->](AWU_output_start) -- (out);
+	% 	 \draw[draw,->](AWU_input_start) |- node[pos = 0.9,yshift=0.2cm]{$-$}(AWU_sum);
+	% 	 \draw[draw,->](AWU_output_start) |- node[pos = 0.9,yshift=0.2cm]{$+$}(AWU_sum);
+	% 	 \draw[draw,->](AWU_sum) -- node[label={[label distance = 0.5cm]270:AntiW\_x}]{}(out_AWU);
+		 
+	% 	 % around Kd
+	% 	 \draw[draw,->](hist_branch) |- (Differentiator);
+	% 	 \draw[draw,->](Differentiator) -- (Kd);	
+	% 	 \draw[draw,->](Kd) -| (Kpsum);
+		 
+	% 	 % around Kp
+	% 	 \draw[draw,->](Kp_input_start) |- (Kp);
+	% 	 \draw[draw,->](Kp) -- (Kpsum);
+	% 	 \draw[draw,->](Kpsum) -- (usum);
+
+        %          % <<RN>>
+        %          % Anti Wind Up and Ki Gains
+        %          \node[smallblock, right =of Kp_input_start] (Ki) {$ K_i$};
+        %          \node[smallblock, above =of Ki,yshift=-0.5cm] (Kb) {$ K_b$};
+        %          \draw[draw, ->] (Kp_input_start) -- (Ki);
+        %          \draw[draw, ->] (Kb)|- (intUP);
+        %          \node[input, left =of Kb](i_AntiW){AntiW\_x};
+        %          \draw[draw,->](i_AntiW) --node[label =  {[label distance =0.3cm]left:AntiW\_x}]{}(Kb);
+
+                 
+	\end{tikzpicture}
+	\caption{VEAE Control Structure}
+	\label{fig:BlockDiag}
+\end{figure*}
+
+%--------------------TEST SANDBOX-----------------------------------------------
+
+%\begin{tikzpicture}
+%	\node[block] (A) {A};
+%	\node[block, right =of A] (B) {B};
+%	\node[block, below =of B] (C) {C};
+%	\node[block, below =of C] (D) {D};
+%	
+%	\node[input, left =of A] (ip) {};
+%	
+%	
+%	\draw[draw,->](ip) -- (A){};
+%	\draw[draw,->](A) -- (B){};
+%	\draw[draw,->](A) |- (C){}; 
+%	
+%	
+%	\path (ip) -- coordinate(br) (A);
+%	\draw[->] (br) node[branch] {};
+%	
+%	\path (A) |- coordinate(br2) (C);
+%	\draw[->] (br2)  node[branch] {};
+%	
+%	\draw[->](br2) |- (D){};
+%	
+%\end{tikzpicture}
+% \end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../robotJointILC"
+%%% End:        
