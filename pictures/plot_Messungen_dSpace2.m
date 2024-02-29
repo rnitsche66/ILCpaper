@@ -101,6 +101,7 @@ xlabel('Iterations','Interpreter','latex','FontSize', 20);
 ylabel('$e_{\mathrm{max}}, e_{\mathrm{rms}}[^\circ]$','Interpreter','latex','FontSize', 20)
 % ylabel('$e_{\mathrm{max}}, e_{\mathrm{rms}}[\mathrm{bar}]$','Interpreter','latex','FontSize', 20)
 title(['$e_{\mathrm{max},',num2str(size(e_max_plot,2)),'} = $ ',num2str(e_infty_max,'%.1e'), ' $^\circ \quad e_{\mathrm{rms},',num2str(size(e_max_plot,2)),'} = $ ',num2str(e_infty_rms,'%.1e'),' $^\circ$'],'Interpreter','latex','FontSize', 20);
+title(['$e_{\mathrm{max},',num2str(70),'} = $ ',num2str(e_infty_max,'%.1e'), ' $^\circ \quad e_{\mathrm{rms},',num2str(70),'} = $ ',num2str(e_infty_rms,'%.1e'),' $^\circ$'],'Interpreter','latex','FontSize', 20);
 % title(['$e_{\mathrm{max},',num2str(size(e_max_plot,2)),'} = $ ',num2str(e_infty_max,'%.1e'), ' bar \quad $e_{\mathrm{rms},',num2str(size(e_max_plot,2)),'} = $ ',num2str(e_infty_rms,'%.1e'),' bar'],'Interpreter','latex','FontSize', 20);
 grid on
 set (gca, 'Xtick', 0:delta_j:max(iter_e)+delta_j);
@@ -118,7 +119,7 @@ legend('Location','best','Fontsize',12)
 
 %% pdf
 fig_path = '.\';
-fnPDF3plts = 'dSpace_Messung_ILC_DR70_Shruti2';
+fnPDF3plts = 'dSpace_Messung_ILC_DR70_Shruti3';
 set(gcf, 'PaperType', 'a4letter');
 set(gcf,'Color',[0.8471 0.8627 0.8824])
  

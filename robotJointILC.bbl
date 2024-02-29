@@ -36,6 +36,11 @@ M.~Flies, J.~L{\'e}vine, P.~Martin, and P.~Rouchon.
 \newblock {Flatness and defect of non-linear systems: introductory theory and
   examples}, 1995.
 
+\bibitem{Golub2013}
+Gene~H. Golub and Charles~F. Van~Loan.
+\newblock {\em Matrix Computations - 4th Edition}.
+\newblock Johns Hopkins University Press, Philadelphia, PA, 2013.
+
 \bibitem{Hoffmann2021}
 K.~Hoffmann, D.~Müller, R.~Simon, and O.~Savodny.
 \newblock On trajectory tracking control of fluid-driven actuators.

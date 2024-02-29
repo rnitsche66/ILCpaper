@@ -49,6 +49,7 @@
 \newcommand{\vpd}{\ind{\vp}{d}}
 \newcommand{\Reff}{\ind{r}{eff}}
 \newcommand{\abs}{|}
+\newcommand{\dSpace}{dSpace$^\circledR$}
 
 
 \begin{document}
@@ -99,7 +100,7 @@ timo.heubach@festo.com}
 \section{Introduction}
 Robot control tasks often follows a repeating trajectory. For this
 kind of application the concept of learning from the error of the
-previous control run lies at hand. That's why in the field of robot
+previous control run is obvious. That's why in the field of robot
 control the concept of ILC is often used \cite{AhnChenEtAl2007}.
 
 The concept of Iterative Learning Control is based on the idea that
@@ -113,7 +114,7 @@ To achieve this, the error and the control signal of the previous
 cycle are analyzed and used to adapt the new control signal. Due to
 the fact that the new control signal is already calculated before each
 cycle, it is possible to apply non-causal algorithms and filters.
-This is a big adbantage compared to a classical feedback controller.
+This is a big advantage compared to a classical feedback controller.
 The ILC approach can be considered as a kind of feedforward control,
 since the control signal only depends of the control error of the
 previous cycle.
@@ -125,15 +126,16 @@ here, for example. Through a combination of feedforward and feedback
 control, the control control peformance and disturbance rejection can
 be improved significantly. This is achieved, as the ILC controller
 reduces the periodic errors and the feedback controller compensates
-the disturbances \cite{ILCGlueck2015}.  For the feedback controller a
-flatness-based approach in the sense of \cite{FliesLevineEtAl1995} is
-used to have a model-based tracking controller of high performance. In
-a second step an ILC approach is introduced to almost perfectly track
-a desired repetitive trajectory.
+the disturbances \cite{ILCGlueck2015}.
 
-This two-degree-of-freedom concept will be applied to a pneumatic
-robot joint and tested in experiments. The achieved performance is
-outstanding.
+For the pneumatic robot joint under consideration, a feedback
+controller based on flatness in the sense of
+\cite{FliesLevineEtAl1995} is used to have a model-based tracking
+controller of high performance. In a second step an ILC approach is
+introduced as an additional controller to almost perfectly track a
+desired repetitive trajectory.  This two-degree-of-freedom concept
+will be applied to a pneumatic robot joint and tested in
+experiments. The achieved performance is outstanding.
 
 
 
@@ -142,14 +144,14 @@ outstanding.
 % *****************************************************************
 For pneumatic robots so far, only fluidic muscles \cite{Tondu2005},
 \cite{BouSaba2018} or bellows for soft robots \cite{Falkenhahn2017}
-are employed.  However, pneumatic robots with rigid links and flexible
-rotary joints, reducing model complexity and kinematic uncertainty,
-are less common found in the literature.  This approach facilitates
-the development of real-time feasible model-based controllers and has
-the potential to achieve higher precision. First of all, the robot
-must be able to track trajectories, which is usually a repetitive
-task. For pneumatic manipulators with coupled joints, this control
-taks is only reported to be ralizable with less accuracy
+have been used.  However, pneumatic robots with rigid links and
+flexible rotary joints, reducing model complexity and kinematic
+uncertainty, are less commonly found in the literature.  This approach
+facilitates the development of real-time feasible model-based
+controllers and has the potential to achieve higher precision. First
+of all, the robot must be able to track trajectories, which is usually
+a repetitive task. For pneumatic manipulators with coupled joints,
+this control task is only reported to be realizable with less accuracy
 \cite{Bobrow1998} \cite{Mattiazzo2002} \cite{Taghia2012}.
 
 Iterative learning control approaches for robots are highly suitable
@@ -198,7 +200,7 @@ The governing equations of the rotary joint model are:
     \ddot \vp  & =  \frac{\Aeff\Reff (p_1-p_2) - \ind{\tau}{f}(\dot\varphi)}{J} , \\
     \label{dp1}
      \dot p_1 &= \frac{n ( R T \dot{m}_1 - p_1 \Aeff \Reff \dot\vp )}{ 
-                \Aeff\Reff\;(\;\abs{\vp_{\mathrm {max}}}+\vp\abs)}  \\
+                \Aeff\Reff\;(\;\abs{\vp_{\mathrm {max}}}+\vp\abs)},  \\
     \label{dp2}
     \dot p_2 &= \frac{n ( R T \dot{m}_2 + p_2 \Aeff \Reff \dot\vp )}{ 
                \Aeff\Reff\;(\;\abs{\vp_{\mathrm {max}}}-\vp\abs)} ,
@@ -236,9 +238,9 @@ mass flow set by the valves.
 
 \begin{Remark}\label{rem:friction}
   In the following, the friction will be neglected for controller
-  design, since the task of the ILC is to compensate the friction,
-  which plays a crucial role in controlling the position of the
-  pneumatic joint with high accuracy. \hfill $\square$
+  design, since one of the tasks of the ILC is to compensate the
+  friction, which plays a crucial role in controlling the position of
+  the pneumatic joint with high accuracy. \hfill $\square$
 \end{Remark}
 
 
@@ -248,9 +250,9 @@ In a first step of the controller design a subordinary pressure
 controller based on flatness is introduced. To control the position
 $\varphi$ a simple linear $PI$ controller is added.
 
-In a second step, a controller using the ILC approach is added to have
-a better or almost perfect tracking behavior for repeating sequences
-of the desired position $\vpd$.
+In a second step, an addidional position controller using the ILC
+approach is added to have a better or almost perfect tracking behavior
+for repeating sequences of the desired position $\vpd$.
 
 The structure of the control loop can be seen in Fig.~\ref{fig:CtrlStrct}.
 
@@ -288,12 +290,12 @@ and $\ind{V}{spec} = \Aeff\Reff$.
 
 By introducing a new input $\nu_{p_1}$ for $\dot p_1$, one gets:
 \begin{equation}\label{nu1}
- \dot p_1 =  \frac{n}{V_1(\vp)} \left(R T \dot m_1 - p_1 \dot \vp \ind{V}{spec}\right)  = \nu_{p_1}
+ \dot p_1 =  \frac{n}{V_1(\vp)} \left(R T \dot m_1 - p_1 \dot \vp \ind{V}{spec}\right)  = \nu_{p_1}.
 \end{equation}
 The nonlinearity of chamber~1 can now easily linearised by feedback
 solving \eqref{nu1} for the system input:
 \begin{equation}\label{eta1}
- \dot m_1 = \frac{V1(\vp)}{n R T}\left( \nu_{p_1} - \frac{n p_1 \dot V_1(\dot \vp)}{V_1(\vp)}   \right) = \eta_1(\vp,\dot \vp,p_1,\nu_{p_1}).
+ \dot m_1 = \frac{V_1(\vp)}{n R T}\left( \nu_{p_1} - \frac{n p_1 \dot V_1(\dot \vp)}{V_1(\vp)}   \right) = \eta_1(\vp,\dot \vp,p_1,\nu_{p_1}).
 \end{equation}
 The same holds for the second chamber, \ie.:
 \begin{equation}\label{linFB}
@@ -343,9 +345,6 @@ To control the postion of the rotational joint, a simple linear controller is us
 
 
 
-% **************************************************************
-\subsection{Iterative Learning Control -- Outer Loop}
-% **************************************************************
 
 % <<fig>> *********************************************************
 \begin{figure*}[tbp]
@@ -356,9 +355,15 @@ To control the postion of the rotational joint, a simple linear controller is us
 % ******************************************************************
 
 
+
+
+% **************************************************************
+\subsection{Iterative Learning Control -- Outer Loop}
+% **************************************************************
+
 In the controller desing so far, no friction model
 (\cf. Remark~\ref{rem:friction}) or other model uncertainties has been
-considered. To address this issues an Iterarive Lerning Control
+considered. To address this issues an Iterative Lerning Control
 approach is introduced and applied to control the position of the
 pneumatic robot joint.
 
@@ -369,10 +374,14 @@ pneumatic robot joint.
   an underlying controller, \eg. the flatness-based pressure and
   position controller is applied to stabilize the system. \hfill $\square$
 \end{Remark}
+\vspace*{2mm}
 
-\emph{Iterative Learning Control works as follows:} In each iteration
-$\left(j=0,1,\ldots\right)$ a feedforward control value $\uv_{j+1}$ is
-calculated.
+\emph{Iterative Learning Control works as follows:} \\ In each
+iteration $\left(j=0,1,\ldots\right)$ a feedforward control value
+$\uv_{j+1}$ is computed. In the feedforward control value $\uv$ all
+the the sample values of a cycle $j$ are collected upto the number of
+samples $N$ during one cycle/iteration, as defined in
+\eqref{eq:u_vec}.
 
 % <<fig>> ******************* CtrlStruct Blockschaltbild *******************
 \input{./pictures/CtrlStrct.tex} % \label{fig:CtrlStrct}
@@ -385,16 +394,16 @@ determined and stored.  The output error
 	\e = \y_\mathrm{d} - \y_\mathrm{m} \equiv
              \boldsymbol{\varphi}_\mathrm{d} - \boldsymbol{\varphi}
 \end{equation}
-is calculated from the difference between the desired signal
+is computed from the difference between the desired signal
 $\y_\mathrm{d}$ and the measured signal $\y_\mathrm{m}$.  In
 Fig.~\ref{fig:illuILC} the sequences of the ILC approach is
 illustrated \cite{ILCGlueck2015}.
 
-In each iteration, the control $\uv_{j+1}$ is calculated by the
-function $\bpsi\bigl(\uv_j,\e_j(\uv_j)\bigr)$. The new control
-therefore only depends on the previous iteration.
+In each iteration, the control $\uv_{j+1}$ is computed by the function
+$\bpsi\bigl(\uv_j,\e_j(\uv_j)\bigr)$. The new control therefore only
+depends on the previous iteration.
 
-The resulting control signal is applied to the system $\G$ in order to
+The resulting control signal is applied to a system $\G$ in order to
 measure the output $\y_{\mathrm{m},j+1}$. Using the setpoint signal
 $\y_\mathrm{d}$, the new output error $\e_{j+1}$ is determined and
 stored temporarily. At the same time, the control signal $\uv_{j+1}$
@@ -434,11 +443,13 @@ By introducing
 
 \begin{align}
 	\label{eq:u_vec}
-	\uv_j &= \bigl[u_j[0] \quad u_j[1] \,  \ldots \, u_j[N-1] \bigr]^T \in R^{N \times 1} \\
-	\y_{\mathrm{d},j} &= \bigl[y_{\mathrm{d},j}[v] \quad y_{\mathrm{d},j}[v+1] \, \ldots \, y_{\mathrm{d},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
-	\y_{\mathrm{m},j} &= \bigl[y_{\mathrm{m},j}[v] \quad y_{\mathrm{m},j}[v+1] \, \ldots \, y_{\mathrm{m},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
+  \uv_j &= \bigl[u_j[0] \quad u_j[1] \,  \ldots \, u_j[N-1] \bigr]^T \in R^{N \times 1} \\
+  \y_{\mathrm{d},j} &= \bigl[y_{\mathrm{d},j}[v] \quad y_{\mathrm{d},j}[v+1] \, \ldots
+                      \, y_{\mathrm{d},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
+  \y_{\mathrm{m},j} &= \bigl[y_{\mathrm{m},j}[v] \quad y_{\mathrm{m},j}[v+1] \, \ldots
+                      \, y_{\mathrm{m},j}[v+N-1] \bigr]^T \in R^{N \times 1} \\
   \e_{j} &= \y_{\mathrm{d},j} - \y_{\mathrm{m},j} \nonumber \\
-        & = \bigl[e_{j}[v] \quad e_{j}[v+1] \, \ldots \, e_{j}[v+N-1] \bigr]^T \in R^{N \times 1}, \label{eq:evec_def}
+         & = \bigl[e_{j}[v] \quad e_{j}[v+1] \, \ldots \, e_{j}[v+N-1] \bigr]^T \in R^{N \times 1}, \label{eq:evec_def}
 \end{align}
 the ILC control law is given in lifted representation:
 \begin{equation}
@@ -447,7 +458,7 @@ the ILC control law is given in lifted representation:
 \end{equation}
 
 
-The gain matrix $\Lm$ has the task of calculating the influence of the
+The gain matrix $\Lm$ has the task of compute the influence of the
 output error $\e_j$ in relation to the previous control $\uv_j$. The
 choice of matrix elements determine the influence of the output error
 on the new feedforward-control.  The filter matrix $\Q$, on the other
@@ -469,13 +480,30 @@ form:
 where $k = 0,1,\ldots,N-1$ is the sampling index.
 
 
+\begin{Remark}\label{rem:stableILC}
+  Stability and convergence can be guaranteed for the ILC control law
+  \eqref{eq:ilc_lift}, by ensuring
+  \begin{subequations}
+  \label{spektralRadius}
+  \begin{align}
+    \rho(\Q(\I - \I\G)) &< 1,\\
+    \rho(\G\Q(\I - \I\G)\G^{-1}) &< 1,
+    \end{align}
+\end{subequations}
+where $\I$ is the idedity matrix and $\rho$ is the spectral radius as
+defined in \cite{Golub2013}. \hfill $\square$
+
+  % In this paper no stability and convergence criterions by choosing
+  % the elements of $\Q$ and $\Lm$ are addressed.
+\end{Remark}
+
 % *****************************************************************
-\subsection{Splitting the torque into chamber pressures}
+\subsection{Splitting the Torque into Chamber Pressures}
 % *****************************************************************
-The output of the controllers \eqref{taupi} and \eqref{tauILC}
-are torques which has  to be added and then converted / split into some
-feasible pressure demands for the underlying pressure controller
-\eqref{linPresCtrl}, \ie.:
+The output of the controllers \eqref{taupi} and \eqref{tauILC} are
+torques, which have to be added and then converted or split
+respectively into some feasible pressure demands for the underlying
+pressure controller \eqref{linPresCtrl}, \ie.:
 \begin{equation}\label{tauOverall}
 \tau = \ind{\tau}{PI} + \ind{\tau}{ILC},
 \end{equation}
@@ -488,11 +516,13 @@ feasible pressure demands for the underlying pressure controller
 \end{subequations}
 while $\ind{p}{m}$ is the so-called mean pressure, which has to be
 defined appropriately.
+
 \begin{Remark}\label{rem:pm}
-  The pressures $p_i$ range around this mean pressure. Note, this mean
-  pressure can be changed during time, depending on the state of the
-  robot or joint, \ie. $\ind{p}{m} = \ind{p}{m}(\x,t)$. In this case,
-  this is a nonlinear MIMO controller. \hfill$\square$
+  The pressures $p_i$ range around the mean
+  pressure $\ind{p}{m}$. Note, this mean pressure can be changed during
+  time, depending on the state of the robot or joint, \ie.
+  $\ind{p}{m} = \ind{p}{m}(\x,t)$. In this case, this is a nonlinear
+  MIMO controller. \hfill$\square$
 \end{Remark}
 
 \vspace*{2mm}
@@ -510,18 +540,18 @@ controllers acting on the valve $\ind{\Sigma}{V}$ can be found in
 % *****************************************************************
 The introduced control concept was tested on an experimental setup as
 seen in Fig.~\ref{fig:ExpSetUp}. This test bench consists of a single
-pneumatic joint which is controlled within a rapid control prototyping
-system from dSpace. The testbench consists of pressure control valve
-for the supply pressure (1), buffer volume (2), flow sensors (3),
-pressure sensor for the supply pressure (4), pneumatic valve with
-valve controller (5), pressure sensor for the chambers (6,7),
-pneumatic joint (8), and an interface PCB to the dSpace system.
+pneumatic joint, which is controlled within a rapid control
+prototyping system from \dSpace. The testbench consists of pressure
+control valve for the supply pressure (1), buffer volume (2), flow
+sensors (3), pressure sensor for the supply pressure (4), pneumatic
+valve with valve controller (5), pressure sensor for the chambers
+(6,7), pneumatic joint (8), and an interface PCB to the \dSpace-system.
 % <<fig>> *********************************************************
 \begin{figure}[bp]
   \centerline{\includegraphics[width=\columnwidth]{./pictures/Aufbau_pJoint.png}}
   \caption{Experimental Setup: the pneumatic joint (8) is controlled
-    via a propotional Piezo valve (5) and a rapid-control-prototyping
-    system from dSpace.}
+    via a proportional Piezo valve (5) and a
+    rapid-control-prototyping-system from \dSpace.}
 \label{fig:ExpSetUp}
 \end{figure}
 % ******************************************************************
@@ -531,13 +561,14 @@ pneumatic joint (8), and an interface PCB to the dSpace system.
 % Script: C:\Users\nitr\OneDrive - Festo\home\papers\_ILC\pictures\plot_Messungen_dSpace.m
 % Data:   ILC_Sollsignal_DR70_Shruti_fric.mat
 \begin{figure*}[htbp]
-\centerline{\includegraphics[scale=.7]{./pictures/dSpace_Messung_ILC_DR70_Shruti2.pdf}}
+\centerline{\includegraphics[scale=.7]{./pictures/dSpace_Messung_ILC_DR70_Shruti3.pdf}}
 \unitlength1mm
 \begin{picture}(0,0)
   \put(10,105){a)}
   \put(10,60){b)}
   \put(10,20){c)}
 \end{picture}
+\vspace*{-5mm}
 \caption{Measurement resutls for a robot joint.}
 \label{fig:ILC70Shruti}
 \end{figure*}
@@ -551,16 +582,17 @@ Fig.~\ref{fig:ILC70Shruti}a. The trajectory tracking performance after
 several interations (repetitions) can be seen in
 Fig.~\ref{fig:ILC70Shruti}a and the tracking error in
 Fig.~\ref{fig:ILC70Shruti}b. The performance after the first iteration
-corresponds to the tracking performance of the flatness-based approach
-only. A maximal tracking error of $\approx 1.5^{\circ}$ can be seen
-after the first run, \ie. for the controller without the ILC
+corresponds to the tracking performance of the flatness-based
+controller only. A maximal tracking error of $\approx 1.5^{\circ}$ can
+be seen after the first run, \ie. for the controller without the ILC
 contribution. As can be seen clearly after several runs, the tracking
-error decreases significantly. It can be seen clearly in
+error decreases significantly. It can be seen in
 Fig.~\ref{fig:ILC70Shruti}b, that after 20 runs the tracking error is
-almost zero. As mentioned in Remark~\ref{rem:friction}, no friction
-compensation is implemented explicitly in the proposed control
-concept, but the friction effects are compensated perfectly by the ILC
-approach.
+almost zero.
+
+As mentioned in Remark~\ref{rem:friction}, no friction compensation is
+implemented explicitly in the proposed control concept, but the
+friction effects are compensated perfectly by the ILC approach.
 
 
 
@@ -571,12 +603,13 @@ ordinate in Fig.~\ref{fig:ILC70Shruti}c is scaled logarithmically.
 
 \begin{Remark}\label{rem:ILCsmallDrive}
   Controlling the smallest drive in the robot, \ie. the drive for the
-  hand-axis, is really a challenging task. For this rather tiny
-  pneumatic actuator, the relation between the driving torque created
-  by the pneumatics and the friction torque is extremely unfavorable.
-  With the proposed ILC concept it was possible to achieve almost
-  perfect tracking performance, even for the pneumatic drive of the
-  hand-axis. \hfill $\square$
+  hand-axis, is really a challenging task. For this axis the pneumatic
+  actuator is rather tiny and therefore the relation between the
+  driving torque created by the pneumatics and the friction torque is
+  extremely unfavorable.  With the proposed ILC concept it was
+  possible to achieve almost perfect tracking performance, even for
+  the pneumatic drive of the hand-axis.  This has so far not been
+  possible with any other control concept. \hfill $\square$
 \end{Remark}
 
 
@@ -591,15 +624,16 @@ Learning Control Learning Control (ILC) improves the control
 performance of repetitive motion significantly over time, even for
 complex nonlinear systems.  By learning from previous cycles, the
 control signal can be adapted for the next cycle, resulting in
-improved control quality. Especially for pneumatic joints build in a
-colaborative robot this concept is highly suitable, since friction and
-model unaccuracies can be compensated almost perfectly.
+improved control quality. Especially for pneumatic joints built in a
+collaborative robot, this concept is highly suitable, since friction and
+model inaccuracies can be compensated almost perfectly.
 
 A major advantage of the ILC algorithm is that it can be used in
-parallel with any existing controller. One prerequisite for this is
+parallel with any existing controller. One prerequisite for this is,
 that the desired trajectory must be identical for each cycle, which is
 why the ILC approach is mostly used in a controller cascade in
 parallel with the superimposed controller.
+
 
 The acausal filtering in the ILC algorithm enables the control signal
 to be filtered without phase shift. This is particularly important
@@ -608,7 +642,7 @@ used simultaneously with an existing controller.
 
 It is successfully demonstrated, that a two-degree-of-freedom approach
 (flatness-based pressure controller and ILC position controller) leads
-to an almost perfect tracking performane for repetitive trajectories
+to an almost perfect tracking performance for repetitive trajectories
 for pneumatic robot joints.
 
 
@@ -618,7 +652,7 @@ for pneumatic robot joints.
 
 % \newpage
 
-\IEEEtriggeratref{12}
+\IEEEtriggeratref{11}
 
 \bibliographystyle{plain}        % {alpha} Include this if you use bibtex 
 \bibliography{BibTeX_database_BC-DS_4Codit}
