@@ -80,18 +80,29 @@ timo.heubach@festo.com}
 % *********************************************************************
 
 \begin{abstract}
+  % The unique physical characteristics of pneumatic drives facilitate
+  % the creation of robots that are not only safe and lightweight but
+  % also intuitive to operate. However, pneumatic robots are due to the
+  % nonlinear behaviour hard to control. Especially friction plays a
+  % major role and limits the control performance of tracking a desired
+  % trajectory.  In this contribution the concept of {\em Iterative
+  %   Learning Control (ILC)} is introduced and applied to a
+  % pneumatically driven joint build-in a pneumatic cobot. Iterative
+  % Learning Control is highly suitable to repeatable control tasks as
+  % they appear typically in robot applications \cite{Longman2000}. With
+  % this approach it is possible to almost perfectly track a given,
+  % repeatable trajectory.
   The unique physical characteristics of pneumatic drives facilitate
-  the creation of robots that are not only safe and lightweight but
-  also intuitive to operate. However, pneumatic robots are due to the
-  nonlinear behaviour hard to control. Especially friction plays a
-  major role and limits the control performance of tracking a desired
-  trajectory.  In this contribution the concept of {\em Iterative
-    Learning Control (ILC)} is introduced and applied to a
-  pneumatically driven joint build-in a pneumatic cobot. Iterative
-  Learning Control is highly suitable to repeatable control tasks as
-  they appear typically in robot applications \cite{Longman2000}. With
-  this approach it is possible to almost perfectly track a given,
-  repeatable trajectory.
+  the creation of robots that are safe lightweight and intuitive to
+  operate. However, pneumatic robots are due to nonlinear behaviour
+  that is hard to control.  Especially friction plays a major role and
+  limits the control performance of tracking a desired trajectory. In
+  this contribution, the concept of \textit{Iterative Learning Control
+    (ILC)} is introduced and applied to a pneumatically driven joint
+  build-in a pneumatic cobot. Iterative Learning Control is highly
+  suitable for repeatable control tasks as they appear typically in
+  robot applications \cite{Longman2000}. With this approach, it is
+  possible almost perfectly to track a given, repeatable trajectory.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -516,7 +527,7 @@ pressure controller \eqref{linPresCtrl}, \ie.:
 \begin{equation}\label{tauOverall}
 \tau = \ind{\tau}{PI} + \ind{\tau}{ILC},
 \end{equation}
-
+\vspace*{-5mm}
 \begin{subequations}\label{tau2pd}
   \begin{align}
                \ind{p}{1,d} &= \ind{p}{m} + \frac{\tau}{2\;\ind{V}{spec}},\\
@@ -621,7 +632,7 @@ root-mean-square-error (rms) over several runs is almost neglectable,
 as can be easily seen in Fig.~\ref{fig:ILC70Shruti}c. Note, the
 ordinate in Fig.~\ref{fig:ILC70Shruti}c is scaled logarithmically.
 
-\enlargethispage{4mm}
+\enlargethispage{8mm}
 
 \begin{Remark}\label{rem:ILCsmallDrive}
   Controlling the smallest drive in the robot, \ie. the drive for the
