@@ -2,6 +2,8 @@
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 % \usepackage{cite}
+% \usepackage{caption} % wg. den Sprungmarken...
+
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
@@ -37,10 +39,10 @@
 % \addbibresource{BibTeX_database_BC-DS_nitr.bib}
 
 \usepackage{float}
-\usepackage[]{hyperref}
-\hypersetup{
-    colorlinks=false,
-}
+ \usepackage[colorlinks=false,hidelinks]{hyperref}
+% \hypersetup{
+%     colorlinks=false,
+% }
 
 \usepackage{util}
 
@@ -173,8 +175,9 @@ but for other industrial applications, \eg. \cite{STADLER2022105071}.
 % https://www.sciencedirect.com/science/article/pii/S0967066122000041?via%3Dihub
 % \end{verbatim}
 
-\subsection{Model of the Pneumatic Robot Joint}
-
+% \subsection{Model of the Pneumatic Robot Joint}
+\noindent
+\emph{Model of the Pneumatic Robot Joint}\\[2mm]
 In this research a single joint (\cf. Fig.~\ref{fig:pJointScheme}) of
 a pneumatic robot (\cf. Fig.~\ref{fig:Octopus}) is considered.  In
 this pneumatically driven revolute joint, the two pressure chambers
@@ -240,7 +243,7 @@ mass flow set by the valves.
   In the following, the friction will be neglected for controller
   design, since one of the tasks of the ILC is to compensate the
   friction, which plays a crucial role in controlling the position of
-  the pneumatic joint with high accuracy. \hfill $\square$
+  the pneumatic joint with high accuracy. \hfill $\diamond$
 \end{Remark}
 
 
@@ -305,7 +308,7 @@ Applying \eqref{linFB} to the model of the rotational joint
 \eqref{pJointMdl} the systems is in Brunovsky canonical form
 \cite{Isidori1995}, \cf. Figure~\ref{fig:Bruno}.
 
-For model of the rotational joint, linearized by feedback,
+For the model of the rotational joint, linearized by feedback,
 \ie. \eqref{pJointMdl} with \eqref{linFB}, a linear controller for the
 pressures can easily designed:
 \begin{equation}\label{linPresCtrl}
@@ -348,7 +351,11 @@ To control the postion of the rotational joint, a simple linear controller is us
 
 % <<fig>> *********************************************************
 \begin{figure*}[tbp]
-\centerline{\includegraphics{./pictures/ILCillu.jpg}}
+  \centering
+%  \centerline{\includegraphics{./pictures/ILCillu.jpg}}
+  %\centerline{
+    \includegraphics[width=1\textwidth]{./pictures/Grundidee_ILC}
+%  }
 \caption{Illustration of the ILC concept \cite{ILCGlueck2015}.}
 \label{fig:illuILC}
 \end{figure*}
@@ -372,7 +379,7 @@ pneumatic robot joint.
   is, that the trajectories are continuously repeating. Another
   condition is, that the system to be controlled is stable. That is why
   an underlying controller, \eg. the flatness-based pressure and
-  position controller is applied to stabilize the system. \hfill $\square$
+  position controller is applied to stabilize the system. \hfill $\diamond$
 \end{Remark}
 \vspace*{2mm}
 
@@ -462,16 +469,18 @@ The gain matrix $\Lm$ has the task of compute the influence of the
 output error $\e_j$ in relation to the previous control $\uv_j$. The
 choice of matrix elements determine the influence of the output error
 on the new feedforward-control.  The filter matrix $\Q$, on the other
-hand, is used to suppress measurement noise and  repetitive
+hand, is used to suppress measurement noise and repetitive
 interference. It acts like a low-pass filter that only allows low
-frequencies to pass through and filters out high frequencies. \\
+frequencies to pass through and filters out high
+frequencies. Furthermore acausale filters can be used, \eg. a Gaussian
+filter as proposed in \cite{ILCGlueck2015}.
 
 The ILC law \eqref{eq:ilc_lift} can also be specified in the discrete
 form:
 
 \begin{subequations}
   \label{eq:ilc_diskret}
-  \begin{align}
+  \begin{align}\label{ILC_discrete}
     u_{j+1}[k] & = q[k] \bigl(u_j[k] + l[k] \, e_j[k+v]\bigr),\\
     \ind{\tau}{ILC} & =  u_{j+1}[k] \label{tauILC}
     \end{align}
@@ -490,8 +499,8 @@ where $k = 0,1,\ldots,N-1$ is the sampling index.
     \rho(\G\Q(\I - \I\G)\G^{-1}) &< 1,
     \end{align}
 \end{subequations}
-where $\I$ is the idedity matrix and $\rho$ is the spectral radius as
-defined in \cite{Golub2013}. \hfill $\square$
+where $\I$ is the identity matrix and $\rho$ is the spectral radius as
+defined in \cite{Golub2013}. \hfill $\diamond$
 
   % In this paper no stability and convergence criterions by choosing
   % the elements of $\Q$ and $\Lm$ are addressed.
@@ -522,7 +531,7 @@ defined appropriately.
   pressure $\ind{p}{m}$. Note, this mean pressure can be changed during
   time, depending on the state of the robot or joint, \ie.
   $\ind{p}{m} = \ind{p}{m}(\x,t)$. In this case, this is a nonlinear
-  MIMO controller. \hfill$\square$
+  MIMO controller. \hfill$\diamond$
 \end{Remark}
 
 \vspace*{2mm}
@@ -538,6 +547,13 @@ controllers acting on the valve $\ind{\Sigma}{V}$ can be found in
 % <<FF>> ***********************************************************
 \section{Experimental Setup and Results}
 % *****************************************************************
+The proposed concept has been tested in simulation and in an
+experimental setup. However, in this paper only the experimental
+results are shown and discussed.  For the experiments a simple
+$P$-type ILC has been used, \ie.  the gain in \eqref{ILC_discrete} is
+defined as $l[k] = \ind{k}{p,ILC}, \; \forall k$.
+
+\subsection{Experimental Setup} % ********************************
 The introduced control concept was tested on an experimental setup as
 seen in Fig.~\ref{fig:ExpSetUp}. This test bench consists of a single
 pneumatic joint, which is controlled within a rapid control
@@ -556,7 +572,7 @@ valve with valve controller (5), pressure sensor for the chambers
 \end{figure}
 % ******************************************************************
 
-\subsection{Experimental Results}
+\subsection{Experimental Results} % ***************************
 % <<fig>> *********************************************************
 % Script: C:\Users\nitr\OneDrive - Festo\home\papers\_ILC\pictures\plot_Messungen_dSpace.m
 % Data:   ILC_Sollsignal_DR70_Shruti_fric.mat
@@ -568,11 +584,13 @@ valve with valve controller (5), pressure sensor for the chambers
   \put(10,60){b)}
   \put(10,20){c)}
 \end{picture}
-\vspace*{-5mm}
+\vspace*{-7mm}
 \caption{Measurement resutls for a robot joint.}
 \label{fig:ILC70Shruti}
 \end{figure*}
 % ******************************************************************
+% For the experiments a simple $P$-type ILC has been used, \ie. in
+% \eqref{ILC_discrete} the gain is defined as $l[k] = \ind{k}{p,ILC}$.
 
 To test the proposed concept a typical test-trajectory is applied to
 one of the swivel drives (Fig.~\ref{fig:pJointScheme}) of the
@@ -581,25 +599,29 @@ of dynamic and stationary parts as can be seen in
 Fig.~\ref{fig:ILC70Shruti}a. The trajectory tracking performance after
 several interations (repetitions) can be seen in
 Fig.~\ref{fig:ILC70Shruti}a and the tracking error in
-Fig.~\ref{fig:ILC70Shruti}b. The performance after the first iteration
-corresponds to the tracking performance of the flatness-based
-controller only. A maximal tracking error of $\approx 1.5^{\circ}$ can
-be seen after the first run, \ie. for the controller without the ILC
-contribution. As can be seen clearly after several runs, the tracking
-error decreases significantly. It can be seen in
-Fig.~\ref{fig:ILC70Shruti}b, that after 20 runs the tracking error is
-almost zero.
+Fig.~\ref{fig:ILC70Shruti}b.
+
+
+Remember, the control value $\ind{\tau}{ILC}$ depends on the previous
+iteration. Since for the first iteration there is no previous one, the
+performance after the first iteration corresponds to the tracking
+performance of the flatness-based controller only. A maximal tracking
+error of $\ind{e}{max}\approx 1.8^{\circ}$ can be seen after the first
+run, \ie. for the controller without the ILC contribution. As can be
+seen clearly after several runs, the tracking error decreases
+significantly. It can be seen in Fig.~\ref{fig:ILC70Shruti}b, that
+after 20 runs the tracking error is almost zero.
 
 As mentioned in Remark~\ref{rem:friction}, no friction compensation is
 implemented explicitly in the proposed control concept, but the
 friction effects are compensated perfectly by the ILC approach.
 
-
-
 The evolution of the maximal control error and the
 root-mean-square-error (rms) over several runs is almost neglectable,
 as can be easily seen in Fig.~\ref{fig:ILC70Shruti}c. Note, the
 ordinate in Fig.~\ref{fig:ILC70Shruti}c is scaled logarithmically.
+
+\enlargethispage{4mm}
 
 \begin{Remark}\label{rem:ILCsmallDrive}
   Controlling the smallest drive in the robot, \ie. the drive for the
@@ -609,7 +631,7 @@ ordinate in Fig.~\ref{fig:ILC70Shruti}c is scaled logarithmically.
   extremely unfavorable.  With the proposed ILC concept it was
   possible to achieve almost perfect tracking performance, even for
   the pneumatic drive of the hand-axis.  This has so far not been
-  possible with any other control concept. \hfill $\square$
+  possible with any other control concept. \hfill $\diamond$
 \end{Remark}
 
 
@@ -652,7 +674,7 @@ for pneumatic robot joints.
 
 % \newpage
 
-\IEEEtriggeratref{11}
+\IEEEtriggeratref{9}
 
 \bibliographystyle{plain}        % {alpha} Include this if you use bibtex 
 \bibliography{BibTeX_database_BC-DS_4Codit}

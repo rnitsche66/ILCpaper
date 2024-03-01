@@ -15,7 +15,8 @@ bibtex %theFile%
 pdflatex %theFile%.tex
 pdflatex %theFile%.tex
 
-rem del *.aux *.toc *.log *.blg *.snm *.out *.nav
+rem Clean Up
+del *.aux *.toc *.log *.blg *.snm *.out *.nav
 
 
 rem pause
